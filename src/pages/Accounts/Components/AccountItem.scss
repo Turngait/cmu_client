@@ -1,0 +1,49 @@
+@import "/src/styles/main.scss";
+
+.item {
+  background: $white;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  color: $black;
+  border: 1px solid rgba(229, 229, 229, 0.65);
+
+  &:hover {
+    background: $base-color;
+    color: $white;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    &__box {
+      display: flex;
+      justify-content: flex-start;
+      gap: 2rem;
+      align-items: baseline;
+    }
+
+    &__title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    &__balance {
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+  }
+
+  &__descr {
+    font-size: 1.2rem;
+  }
+}
+
+.active {
+  background: $light-green-gradient;
+  color: $white;
+}

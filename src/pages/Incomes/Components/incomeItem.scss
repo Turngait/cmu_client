@@ -1,0 +1,68 @@
+@import "/src/styles/main.scss";
+
+.income {
+  border-radius: 5px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: $light-green-gradient;
+  width: 28rem;
+  min-height: 14rem;
+  padding: 1.5rem 2rem;
+  color: $white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+
+  &__headerBox {
+    display: flex;
+    justify-content: space-between;
+
+    &__title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      max-width: 20rem;
+      overflow: hidden;
+    }
+
+    &__iconBox {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.6rem;
+    }
+  }
+
+  &__amount {
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+
+  &__info {
+    font-size: 1.4rem;
+  }
+
+  &__showMore {
+    font-size: 1.2rem;
+    text-decoration: underline;
+    align-self: flex-end;
+    cursor: pointer;
+  }
+
+  &__source,
+  &__budget {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 500px) {
+  .income {
+    font-size: 1.2rem;
+    min-height: 14rem;
+    padding: 1.2rem 1.4rem;
+  }
+  .income__headerBox__title,
+  .income__amount {
+    font-size: 1.6rem;
+  }
+}

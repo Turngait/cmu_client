@@ -1,0 +1,215 @@
+@import "/src/styles/main.scss";
+.dashboard {
+  color: $black;
+  background-color: $background-main-page;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem 5rem 2rem 5rem;
+    font-size: 2rem;
+    background-color: $white;
+
+    &__nav,
+    &__controlBox {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+
+      &__btn2 {
+        background: none;
+        color: $black;
+        text-decoration: underline;
+        box-shadow: none;
+
+        &:hover {
+          color: $white;
+        }
+      }
+
+      &__item {
+        text-decoration: underline;
+        cursor: pointer;
+        color: $black;
+        transition-duration: 1s;
+        margin: 0;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+  &__firstScreen {
+    display: flex;
+    justify-content: space-between;
+    padding: 10rem;
+  }
+  &__leftBox {
+    display: flex;
+    flex-direction: column;
+    &__textBox {
+      flex-grow: 1;
+
+      &__btnLocale {
+        width: 4rem;
+        height: 4rem;
+        font-size: 1.8rem;
+        border: 0;
+        border-radius: 50rem;
+        cursor: pointer;
+        background: $light-green-gradient;
+        color: $white;
+        transition-duration: 1s;
+
+        &:hover {
+          opacity: 0.8;
+          box-shadow: none;
+        }
+      }
+
+      &__text {
+        font-size: 1.6rem;
+        width: 70rem;
+        line-height: 2.2rem;
+
+        &__link {
+          color: $black;
+        }
+
+        &__img {
+          width: 4rem;
+        }
+      }
+    }
+
+    &__bottomBox {
+      font-size: $normal-font-size;
+      display: flex;
+      gap: 2rem;
+
+      &__link {
+        color: $black;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__rightBox__img {
+    width: 70rem;
+  }
+
+  &__secondScreen {
+    color: $white;
+    &__infoBox {
+      padding: 5rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 10rem;
+
+      &__item {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+
+        &__text {
+          background: rgba(82, 82, 82, 0.85);
+          border-radius: 5px;
+          padding: 4.4rem;
+          font-size: 1.6rem;
+        }
+
+        &__imgBox {
+          &__img {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  &__footer {
+    background: rgba(82, 82, 82, 0.85);
+    padding: 3rem 5rem;
+    font-size: $normal-font-size;
+    display: flex;
+    gap: 2rem;
+    color: $white;
+
+    &__link {
+      color: $white;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
+@media all and (min-width: 0) and (max-width: 1500px) {
+  .dashboard__rightBox__img {
+    width: 100%;
+  }
+}
+@media all and (min-width: 0) and (max-width: 1300px) {
+  .dashboard__leftBox__textBox__text {
+    width: auto;
+  }
+  .dashboard__firstScreen {
+    padding: 6rem;
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 1000px) {
+  .dashboard__secondScreen__infoBox {
+    flex-direction: column;
+    gap: 4rem;
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 800px) {
+  .dashboard__firstScreen {
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem;
+  }
+  .dashboard__header {
+    padding: 2rem;
+  }
+
+  .dashboard__secondScreen__infoBox__item__text {
+    padding: 2.5rem;
+    font-size: 1.6rem;
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 500px) {
+  .dashboard__header {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 1.6rem;
+  }
+  .dashboard__leftBox__textBox__header {
+    font-size: 6rem;
+  }
+  .dashboard__leftBox__textBox__text,
+  .dashboard__secondScreen__infoBox__item__text {
+    font-size: 1.4rem;
+  }
+  .dashboard__secondScreen__infoBox {
+    padding: 2rem;
+  }
+
+  .dashboard__footer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.betaVersion {
+  font-size: 1.4rem;
+  margin: 0;
+  font-weight: 700;
+}

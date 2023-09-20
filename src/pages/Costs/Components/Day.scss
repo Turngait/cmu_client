@@ -1,0 +1,60 @@
+@import "/src/styles/main.scss";
+
+.day {
+  background: $white;
+  border-radius: 5px;
+  padding: 2.5rem 3rem;
+
+  &__info {
+    background: $dark-blue;
+    padding: 0.8rem 2rem;
+    color: $white;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 11.5rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    min-height: 4rem;
+  }
+
+  &__cardsBox {
+    padding: 2rem 0;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+}
+
+.attention {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 2px solid $red;
+  color: $red;
+  border-radius: 100px;
+  text-align: center;
+  box-sizing: border-box;
+}
+@media all and (min-width: 0) and (max-width: 700px) {
+  .day__info {
+    gap: 1.4rem;
+  }
+}
+@media all and (min-width: 0) and (max-width: 480px) {
+  .day {
+    padding: 1.4rem 1.4rem;
+  }
+  .day__info {
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 1.2rem;
+    padding: 0.8rem 1.2rem;
+  }
+  .day__cardsBox {
+    padding: 1rem 0;
+  }
+  .attention {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+}

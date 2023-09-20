@@ -1,0 +1,80 @@
+@import "/src/styles/main.scss";
+
+.dashboard {
+  height: 100%;
+  background-color: $background;
+
+  &__info {
+    font-size: 1.6rem;
+
+    &__canvasBox {
+      width: 80%;
+      margin-bottom: 2.6rem;
+    }
+  }
+
+  &__container {
+    padding: 2.5rem 5rem;
+    height: 90%;
+    overflow-y: auto;
+
+    &__infoText {
+      max-width: 60rem;
+      font-size: 1.6rem;
+      padding: 1rem 0;
+      line-height: 2.4rem;
+    }
+
+    &__graphsBox {
+      &__headerBox {
+        margin-top: 1rem;
+
+        &__heading {
+          font-size: 1.4rem;
+          flex-basis: 5rem;
+          margin-bottom: 1rem;
+        }
+
+        &__addBtn {
+          border: 0;
+          background: $light-green-gradient;
+          color: $white;
+          padding: 0.2rem 0.6rem;
+          box-shadow: 0px 2px 1px rgba(68, 68, 68, 0.25);
+          border-radius: 0.5rem;
+          cursor: pointer;
+          transition-duration: 1s;
+
+          &:hover {
+            box-shadow: none;
+          }
+        }
+      }
+      &__donChartsFlex {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 5rem;
+      }
+      &__donChartBox {
+        width: 40rem;
+      }
+    }
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 500px) {
+  .dashboard__container {
+    padding: 1.5rem;
+    box-sizing: border-box;
+    height: 85%;
+  }
+
+  .dashboard__container__graphsBox__donChartBox {
+    width: 30rem;
+  }
+
+  .Hide500px {
+    display: none;
+  }
+}

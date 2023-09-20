@@ -1,0 +1,59 @@
+@import "/src/styles/main.scss";
+
+.target {
+  border-radius: 5px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: $light-blue-gradient;
+  width: 28rem;
+  min-height: 12rem;
+  padding: 1.5rem 2rem;
+  color: $white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+
+  &__headerBox {
+    display: flex;
+    justify-content: space-between;
+
+    &__title {
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+
+    &__iconBox {
+      display: flex;
+      justify-content: flex-start;
+      gap: 1.6rem;
+    }
+  }
+
+  &__amount {
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+
+  &__info {
+    font-size: 1.4rem;
+  }
+
+  &__showMore {
+    font-size: 1.2rem;
+    text-decoration: underline;
+    align-self: flex-end;
+    cursor: pointer;
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 500px) {
+  .target {
+    font-size: 1.4rem;
+    min-height: 14rem;
+  }
+  .target__headerBox__title,
+  .target__amount {
+    font-size: 1.8rem;
+  }
+}

@@ -1,0 +1,91 @@
+@import "/src/styles/main.scss";
+
+.costs {
+  height: 100%;
+  background-color: $background;
+
+  &__container {
+    padding: 2.5rem 5rem;
+    height: 90%;
+    overflow-y: auto;
+
+    &__noCost {
+      font-size: 2.2rem;
+    }
+
+    &__targetsBox {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+
+      &__targetManagement {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-end;
+      }
+
+      &__openTManagementBtn {
+        background: none;
+        border: none;
+        text-decoration: underline;
+        font-size: 1.8rem;
+        cursor: pointer;
+        color: $black;
+      }
+    }
+
+    &__monthlyTargetsBox {
+      margin-bottom: 2.5rem;
+      padding: 1.2rem 3rem;
+      background: $white;
+      border: 1px solid #f8f8f8;
+
+      border-radius: 5px;
+      &__item {
+        font-size: 1.6rem;
+        margin-bottom: 1.2rem;
+        color: $black;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  &__total {
+    font-size: 22px;
+    color: $black;
+    font-weight: 400;
+  }
+}
+@media all and (min-width: 0) and (max-width: 940px) {
+  .costs__container {
+    padding: 1.6rem 2rem;
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 700px) {
+  .costs__container__targetsBox {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-items: flex-start;
+    &__targetManagement {
+      align-items: flex-start;
+    }
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 500px) {
+  .costs__container {
+    padding: 1.4rem 1.2rem;
+    box-sizing: border-box;
+    height: 85%;
+  }
+  .costs__total {
+    font-size: 1.8rem;
+    margin-bottom: 0;
+  }
+}

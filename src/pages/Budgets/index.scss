@@ -1,0 +1,43 @@
+@import "/src/styles/main.scss";
+
+.budgets {
+  height: 100%;
+  background-color: $background;
+
+  &__container {
+    padding: 3rem 2rem;
+    height: 90%;
+  }
+
+  &__box {
+    border-radius: 5px;
+    margin-top: 3rem;
+    background: $white;
+    padding: 2.5rem 3rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  &__msg {
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 500px) {
+  .budgets__container {
+    padding: 1.4rem 1.2rem;
+    box-sizing: border-box;
+    height: 85%;
+  }
+
+  .budgets__box {
+    padding: 1.4rem 1.4rem;
+    margin-top: 0;
+    height: auto;
+  }
+}

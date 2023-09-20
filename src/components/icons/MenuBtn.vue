@@ -1,0 +1,30 @@
+<template>
+  <svg
+    @click="onClick"
+    class="menuBtnIcon"
+    width="41"
+    height="25"
+    viewBox="0 0 41 27"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    data-test="menuBtn"
+  >
+    <path
+      d="M41 27H20.75V22.5H41V27ZM41 15.75H0.5V11.25H41V15.75ZM41 4.5H0.5V0H41V4.5Z"
+      fill="#525252"
+    />
+  </svg>
+</template>
+
+<script>
+export default {
+  name: "MenuBtnIcon",
+  props: ["onClick"],
+};
+</script>
+
+<style scoped lang="scss">
+.menuBtnIcon {
+  cursor: pointer;
+}
+</style>

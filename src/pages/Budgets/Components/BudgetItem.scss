@@ -1,0 +1,62 @@
+@import "/src/styles/main.scss";
+
+.budget {
+  width: 28rem;
+  height: 14rem;
+  background: linear-gradient(180deg, #2fd02b 0%, rgba(47, 208, 43, 0.74) 100%);
+  border-radius: 5px;
+  padding: 1.5rem 2rem;
+  color: $white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+
+  &__headerBox {
+    display: flex;
+    justify-content: space-between;
+
+    &__title {
+      font-weight: 700;
+      font-size: 1.6rem;
+      cursor: pointer;
+      text-decoration: underline;
+      max-width: 18rem;
+      overflow: hidden;
+    }
+
+    &__iconBox {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.6rem;
+    }
+  }
+
+  &__amount {
+    font-weight: 700;
+    font-size: 1.6rem;
+  }
+
+  &__date {
+    font-size: 1.6rem;
+  }
+
+  &__showMore {
+    font-size: 1.2rem;
+    text-decoration: underline;
+    align-self: flex-end;
+    cursor: pointer;
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 500px) {
+  .budget {
+    height: 12rem;
+    font-size: 1.2rem;
+    padding: 1.2rem 1.4rem;
+  }
+  .budget__headerBox__title,
+  .budget__amount {
+    font-size: 1.6rem;
+  }
+}
