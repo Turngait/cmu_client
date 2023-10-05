@@ -125,9 +125,9 @@ export default {
       const result = await this.addGroup(group);
       if (result) {
         this.toggleAddGroupOpen();
-        this.$toast("Group is added");
+        this.$toast.info("Group is added");
       } else {
-        this.$toast("Something is went wrong");
+        this.$toast.info("Something is went wrong");
       }
     },
   },

@@ -114,9 +114,9 @@ export default {
       if (result) {
         this.addIncomesToggle();
         await this.getData();
-        this.$toast(this.$t("notifications.incomeOnAdd"));
+        this.$toast.info(this.$t("notifications.incomeOnAdd"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     setIncomes(data) {
@@ -139,9 +139,9 @@ export default {
       const status = await deleteIncomeService(income, token);
       if (status) {
         await this.getData();
-        this.$toast(this.$t("notifications.incomeOnDelete"));
+        this.$toast.info(this.$t("notifications.incomeOnDelete"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async addSource(source) {

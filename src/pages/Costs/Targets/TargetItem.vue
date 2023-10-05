@@ -1,21 +1,19 @@
 <template>
   <div class="target">
-    <template>
-      <div class="target__headerBox">
-        <h3 class="target__headerBox__title">{{ showType(target.type) }}</h3>
-        <div class="target__headerBox__iconBox">
-          <EditBtnIcon :onClick="onEdit" />
-          <DeleteBtnIcon :onClick="onDelete" />
-        </div>
+    <div class="target__headerBox">
+      <h3 class="target__headerBox__title">{{ showType(target.type) }}</h3>
+      <div class="target__headerBox__iconBox">
+        <EditBtnIcon :onClick="onEdit" />
+        <DeleteBtnIcon :onClick="onDelete" />
       </div>
-      <div class="target__amount">{{ target.amount + " " + currency }}</div>
-      <div
-        v-if="target.type === 'month'"
-        class="target__info target__groupTitle"
-      >
-        {{ $t("costs.group") }}: {{ groupName }}
-      </div>
-    </template>
+    </div>
+    <div class="target__amount">{{ target.amount + " " + currency }}</div>
+    <div
+      v-if="target.type === 'month'"
+      class="target__info target__groupTitle"
+    >
+      {{ $t("costs.group") }}: {{ groupName }}
+    </div>
   </div>
 </template>
 

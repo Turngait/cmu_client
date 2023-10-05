@@ -128,9 +128,9 @@ export default {
 
       if (status === 200) {
         this.$store.commit("user/setName", this.name);
-        this.$toast(this.$t("notifications.nameOnChange"));
+        this.$toast.info(this.$t("notifications.nameOnChange"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async changePass() {
@@ -141,9 +141,9 @@ export default {
 
       if (status === 200) {
         this.$store.commit("user/setName", this.name);
-        this.$toast(this.$t("notifications.passwordOnChange"));
+        this.$toast.info(this.$t("notifications.passwordOnChange"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
   },

@@ -183,9 +183,9 @@ export default {
       this.isLoadingToggle(false);
       if (result === 202) {
         await this.getData();
-        this.$toast(this.$t("notifications.targetAdded"));
+        this.$toast.info(this.$t("notifications.targetAdded"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async deleteTarget(id) {
@@ -199,9 +199,9 @@ export default {
       this.isLoadingToggle(false);
       if (result === 202) {
         await this.getData();
-        this.$toast(this.$t("notifications.targetOnDelete"));
+        this.$toast.info(this.$t("notifications.targetOnDelete"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async editTarget(target) {
@@ -215,9 +215,9 @@ export default {
       this.isLoadingToggle(false);
       if (result === 202) {
         await this.getData();
-        this.$toast(this.$t("notifications.targetOnEdit"));
+        this.$toast.info(this.$t("notifications.targetOnEdit"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async addCost(cost) {
@@ -228,9 +228,9 @@ export default {
       if (result === 202) {
         this.addCostToggle();
         await this.getData();
-        this.$toast(this.$t("notifications.costOnAdd"));
+        this.$toast.info(this.$t("notifications.costOnAdd"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async addGroup(group) {
@@ -269,9 +269,9 @@ export default {
 
       if (result) {
         await this.onMounted();
-        this.$toast(this.$t("notifications.costOnDelete"));
+        this.$toast.info(this.$t("notifications.costOnDelete"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     isLoadingToggle(state) {

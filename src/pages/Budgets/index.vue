@@ -145,9 +145,9 @@ export default {
       if (result) {
         this.$store.commit("user/setBudget", this.budgets);
         this.addBudgetToggle();
-        this.$toast(this.$t("notifications.budgetOnAdd"));
+        this.$toast.info(this.$t("notifications.budgetOnAdd"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async deleteBudget(id) {
@@ -159,9 +159,9 @@ export default {
       );
       if (isDeleted) {
         this.budgets = this.budgets.filter((budget) => budget.id !== id);
-        this.$toast(this.$t("notifications.budgetOnDelete"));
+        this.$toast.info(this.$t("notifications.budgetOnDelete"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     editBudgetOpen(id) {
@@ -180,9 +180,9 @@ export default {
           if (item.id === budget.id) item.title = budget.title;
         }
         this.closeEditBudget();
-        this.$toast(this.$t("notifications.budgetOnEdit"));
+        this.$toast.info(this.$t("notifications.budgetOnEdit"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async changePeriod(newPeriod) {

@@ -104,9 +104,9 @@ export default {
       if (result === 202) {
         this.toggleIsAddAccOpen();
         await this.onMounted();
-        this.$toast(this.$t("notifications.accountOnAdd"));
+        this.$toast.info(this.$t("notifications.accountOnAdd"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async deleteAccount(accountId) {
@@ -119,9 +119,9 @@ export default {
       );
       if (result === 200) {
         await this.onMounted();
-        this.$toast(this.$t("notifications.accountOnDelete"));
+        this.$toast.info(this.$t("notifications.accountOnDelete"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     editAccOpen(id) {
@@ -142,9 +142,9 @@ export default {
       if (result === 200) {
         this.closeEditAcc();
         await this.onMounted();
-        this.$toast(this.$t("notifications.accountOnEdit"));
+        this.$toast.info(this.$t("notifications.accountOnEdit"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     switchAccount(id) {
