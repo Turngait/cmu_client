@@ -6,7 +6,7 @@ export default {
     add: "Add",
     ok: "Ok",
     dashboard: "Dashboard",
-    costs: "Expense",
+    costs: "Expenses",
     costsByGroups: "Expenses by groups",
     incomesBySources: "Incomes by sources",
     incomes: "Incomes",

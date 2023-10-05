@@ -109,9 +109,9 @@ export default {
       const result = await this.addSource(source);
       if (result) {
         this.toggleAddSourceOpen();
-        this.$toast("Source is added");
+        this.$toast.info("Source is added");
       } else {
-        this.$toast("Something is went wrong");
+        this.$toast.info("Something is went wrong");
       }
     },
     toggleAddSourceOpen() {

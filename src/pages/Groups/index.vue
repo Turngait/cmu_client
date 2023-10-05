@@ -98,9 +98,9 @@ export default {
       if (result) {
         const accountId = localStorage.getItem("accountId");
         await getInitialDataService(token, accountId, this.setData);
-        this.$toast(this.$t("notifications.groupOnEdit"));
+        this.$toast.info(this.$t("notifications.groupOnEdit"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async deleteGroup(id) {
@@ -112,9 +112,9 @@ export default {
       });
       if (result) {
         await getInitialDataService(token, accountId, this.setData);
-        this.$toast(this.$t("notifications.groupOnDelete"));
+        this.$toast.info(this.$t("notifications.groupOnDelete"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
     async deleteSource(id) {
@@ -126,9 +126,9 @@ export default {
       });
       if (result) {
         await getInitialDataService(token, accountId, this.setData);
-        this.$toast(this.$t("notifications.sourceOnDelete"));
+        this.$toast.info(this.$t("notifications.sourceOnDelete"));
       } else {
-        this.$toast(this.$t("notifications.somethingWentWrong"));
+        this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
   },

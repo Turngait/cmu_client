@@ -39,7 +39,6 @@
           <select v-model="locale" class="nav__linksBox__selectLocale">
             <option value="en">English</option>
             <option value="ru">Russian</option>
-            <option value="tat">Tatarcha(beta)</option>
           </select>
         </div>
       </div>

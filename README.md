@@ -1,16 +1,43 @@
-# new_client
+# Client side (Beta version) of CalcMeUp project
 
-## Project setup
+Location
+http://http://cmu.ilya-r.com/
+
+Layouts:
 ```
+https://www.figma.com/file/3DWbCoW6H7RjfeRt5J0HJf/FinCloud?node-id=0%3A1
+```
+
+API code base:
+```
+https://github.com/Turngait/fincloud_api_nest
+```
+
+## Requirements
+
+Packages:
+```
+git
+nodejs
+npm
+```
+## Project setup (Linux version)
+
+```
+git clone https://github.com/Turngait/cmu_client.git client
+cd client
 npm install
+cd src/config
+cp key.example.js key.js
 ```
+Fill API_KEY in key.js file
 
-### Compiles and hot-reloads for development
+### Run in dev mode
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Building
 ```
 npm run build
 ```
@@ -19,6 +46,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

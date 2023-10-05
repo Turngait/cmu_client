@@ -1,8 +1,8 @@
 <template>
   <div class="chartPlate">
     <div class="chartPlate__headerBox">
-      <p>
-        <u>{{ title }}</u>
+      <p class="chartPlate__titleBox">
+        <u @click="goTo">{{ title }}</u>
       </p>
       <p>{{ $t("common.inThisMonth") }}: {{ amount }}</p>
     </div>
@@ -54,6 +54,10 @@ export default {
         data: finData,
       });
     },
+    goTo() {
+      if(this.title === "Expenses") this.$router.push('/costs');
+      if(this.title === "Incomes") this.$router.push('/incomes');
+    }
   },
   mounted() {
     if (this.options) this.setPopChart(this.options);
@@ -62,6 +66,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "/src/styles/main.scss";
 .chartPlate {
   background: #ffffff;
   padding: 2rem;
@@ -74,6 +79,12 @@ export default {
 
     display: flex;
     justify-content: space-between;
+  }
+
+  &__titleBox {
+    text-decoration-line: underline;
+    color: $black;
+    cursor: pointer;
   }
 }
 </style>
