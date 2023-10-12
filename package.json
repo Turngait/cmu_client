@@ -1,6 +1,6 @@
 {
-  "name": "new_client",
-  "version": "0.1.0",
+  "name": "cmu_client",
+  "version": "0.9.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

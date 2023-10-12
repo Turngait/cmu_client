@@ -2,7 +2,6 @@
   <PopUp
     :header="$t('costs.filteredCostTitle')"
     :onClose="onClose"
-    :className="'modalStat'"
   >
     <div class="modal__headerBox__total">
       {{ `${$t("costs.total")}: ${total} ${currency}` }}

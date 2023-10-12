@@ -60,7 +60,8 @@ export async function deleteBudgetService(budgetId, token, setErrors) {
       setTimeout(() => setErrors(""), 4000);
       return false;
     } else {
-      setErrors(res.status);
+      const data = await res.json();
+      setErrors(data.data.msg);
       return false;
     }
   });

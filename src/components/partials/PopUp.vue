@@ -1,6 +1,6 @@
 <template>
   <div class="overlay">
-    <div class="modal">
+    <div :class="dialog ? 'modal dialog' : 'modal'">
       <div class="modal__headerBox">
         <h3 class="modal__headerBox__title">{{ header }}</h3>
         <CloseBtnIcon :onClick="onClose" />
@@ -15,7 +15,7 @@ import CloseBtnIcon from "../icons/CloseBtn.vue";
 
 export default {
   name: "pop-up",
-  props: ["onClose", "header"],
+  props: ["onClose", "header", "dialog"],
   components: { CloseBtnIcon },
 };
 </script>
@@ -54,5 +54,9 @@ export default {
       font-size: 2.2rem;
     }
   }
+}
+
+.dialog {
+  width: 36rem;
 }
 </style>
