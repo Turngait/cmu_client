@@ -122,7 +122,7 @@ export function showBudgetName(id_budget, budgets) {
     }
   }
 
-  return "None";
+  return "Budget was deleted";
 }
 
 export function getHistoryBudgetItems(budget_id, costs, incomes) {

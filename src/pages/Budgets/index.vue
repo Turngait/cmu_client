@@ -1,6 +1,7 @@
 <template>
   <div class="budgets">
     <FirstTimeBudgets v-if="onBoarding.firstTime" :onClose="closeFirstTime" />
+    <DialogModal v-if="dialogModalOpen" :text="dialogModalText" :onClose="closeDialogModal" :onSubmit="dialogModalOnSubmit"/>
     <BudgetHistoryModal
       :items="historyItems"
       v-if="isHistoryOpen"
@@ -35,7 +36,7 @@
           v-for="item of budgets"
           :key="item.id"
           :item="item"
-          :deleteBudget="deleteBudget"
+          :deleteBudget="onDeleteBudget"
           :editBudget="editBudgetOpen"
           :isLast="budgets.length <= 1"
           :currency="currency"
@@ -55,6 +56,7 @@ import EditBudgetModal from "./Modals/EditBudgetModal.vue";
 import BudgetHistoryModal from "./Modals/BudgetHistoryModal.vue";
 import AddBigBtn from "../../components/controls/AddBigBtn.vue";
 import FirstTimeBudgets from "../../components/onboarding/FirstTimeBudgets.vue";
+import DialogModal from "@/components/partials/DialogModal.vue";
 
 import {
   getActiveAccount,
@@ -90,6 +92,9 @@ export default {
       onBoarding: {
         firstTime: false,
       },
+      dialogModalOpen: false,
+      dialogModalText: "",
+      dialogModalOnSubmit: null,
     };
   },
   components: {
@@ -100,6 +105,7 @@ export default {
     EditBudgetModal,
     BudgetHistoryModal,
     FirstTimeBudgets,
+    DialogModal
   },
   methods: {
     logOut() {
@@ -150,7 +156,13 @@ export default {
         this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
+    async onDeleteBudget(budgetId) {
+      this.dialogModalOnSubmit = () => this.deleteBudget(budgetId);
+      this.dialogModalText = "Are want to delete this?";
+      this.dialogModalOpen = true;
+    },
     async deleteBudget(id) {
+      this.dialogModalOpen = false;
       const token = localStorage.getItem("token");
       const isDeleted = await deleteBudgetService(
         id,

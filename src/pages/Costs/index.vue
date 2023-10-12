@@ -12,6 +12,7 @@
         :deleteTarget="deleteTarget"
         :editTarget="editTarget"
       />
+      <DialogModal v-if="dialogModalOpen" :text="dialogModalText" :onClose="closeDialogModal" :onSubmit="dialogModalOnSubmit"/>
       <FilteredCostsModal
         v-if="filteredCosts"
         :filteredCosts="filteredCosts"
@@ -79,7 +80,7 @@
             v-for="item in costs"
             :key="item.period"
             :data="item"
-            :deleteCost="deleteCost"
+            :deleteCost="onDeleteCost"
             :filterCostsByGroup="filterCostsByGroup"
             :filteredCostsByBudget="filteredCostsByBudget"
             :targets="targets"
@@ -104,6 +105,7 @@ import Preloader from "../../components/partials/Preloader.vue";
 import FilteredCostsModal from "./Modals/FilteredCostsModal.vue";
 import TargetManagementModalVue from "./Targets/TargetManagementModal.vue";
 import FirstTimeCosts from "../../components/onboarding/FirstTimeCosts.vue";
+import DialogModal from "@/components/partials/DialogModal.vue";
 
 import {
   getActiveAccount,
@@ -145,6 +147,9 @@ export default {
       onBoarding: {
         firstTime: false,
       },
+      dialogModalOpen: false,
+      dialogModalText: "",
+      dialogModalOnSubmit: null,
     };
   },
   components: {
@@ -157,8 +162,12 @@ export default {
     FilteredCostsModal,
     TargetManagementModalVue,
     FirstTimeCosts,
+    DialogModal,
   },
   methods: {
+    closeDialogModal() {
+      this.dialogModalOpen = false;
+    },
     showTargetGroupName(group_id) {
       return showGroupName(group_id, this.groups);
     },
@@ -257,7 +266,13 @@ export default {
       this.balance = balance;
       this.$store.commit("user/setBalance", balance);
     },
+    async onDeleteCost(costId) {
+      this.dialogModalOnSubmit = () => this.deleteCost(costId);
+      this.dialogModalText = "Are want to delete this?";
+      this.dialogModalOpen = true;
+    },
     async deleteCost(costId) {
+      this.dialogModalOpen = false;
       const token = localStorage.getItem("token");
       const cost = this.getCostByID(costId);
       const result = await deleteCostItemService(

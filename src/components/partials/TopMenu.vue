@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-      locale: "ru",
+      locale: "en",
       isMenuOpen: false,
       month: this.period ? this.period : new Date().toISOString().slice(0, 7),
     };
