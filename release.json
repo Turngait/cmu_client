@@ -1,5 +1,10 @@
 [
   {
+    "version": "0.9.2",
+    "date": "16.10.2023",
+    "description": "Fix layout bug with AddButton"
+  },
+  {
     "version": "0.9.1",
     "date": "12.10.2023",
     "description": "Add dialog modal and improve some texts"
