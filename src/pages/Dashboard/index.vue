@@ -91,6 +91,10 @@ import DonChart from "./Components/DonChart.vue";
 
 import { getFinData } from "./services";
 import { getActiveAccount, calculateGroupSum } from "../../utils/index";
+import { ref } from 'vue';
+import { useStore } from 'vuex'
+
+import { useData } from "./hooks/useData";
 
 export default {
   name: "dashboard-main",
@@ -105,14 +109,6 @@ export default {
   props: ["logOut"],
   data() {
     return {
-      isLoading: false,
-      balance: 0,
-      period: this.$store.state.user.month,
-      costsGarphData: null,
-      incomesGarphData: null,
-      costGraphShow: false,
-      incomesGraphShow: false,
-      accLatter: "",
       onBoarding: {
         firstTime: false,
       },
@@ -121,9 +117,125 @@ export default {
       sourcesChartOptions: null,
       groupsChartOptions: null,
       graphData: null,
-      spendInMonth: 0,
-      gainByPeriod: 0,
     };
+  },
+  async setup() {
+    const store = useStore()
+    let isLoading = ref(false)
+    let period = ref(store.state.user.month)
+    let incomesGraphShow = ref(false)
+    let costGraphShow = ref(false)
+    let accLatter = ref('')
+    const balance = ref(0)
+    const costsGarphData = ref(null)
+    const incomesGarphData = ref(null)
+    const spendInMonth = ref(0)
+    const gainByPeriod = ref(0)
+
+    setGraphOptions(costsGarphData, incomesGarphData, groups, sources) {
+      if (
+        costsGarphData &&
+        costsGarphData.days &&
+        costsGarphData.days.length > 2
+      ) {
+        const costsOptions = {
+          color: "#00A6CB",
+          label: this.$t("common.costs"),
+          canvasId: "costChart",
+          data: costsGarphData,
+        };
+
+        const incomesOptions = {
+          color: "#2EC62A",
+          label: this.$t("common.incomes"),
+          canvasId: "incomeChart",
+          data: incomesGarphData,
+        };
+
+        const groupsOptions = {
+          data: groups,
+          canvasId: "donPopChartGroups",
+          text: this.$t("common.costsByGroups"),
+          label: "Группа расходов",
+        };
+
+        const sourcesOptions = {
+          data: sources,
+          canvasId: "donPopChartSources",
+          text: this.$t("common.incomesBySources"),
+          label: "Группа расходов",
+        };
+        this.graphData = [incomesOptions, costsOptions];
+        this.costChartOptions = costsOptions;
+        this.incomeChartOptions = incomesOptions;
+        this.groupsChartOptions = groupsOptions;
+        this.sourcesChartOptions = sourcesOptions;
+      }
+    }
+
+    const setFinDate = (data) => {
+      const { groups } = calculateGroupSum(data.costs);
+      const { sources } = calculateGroupSum(data.incomes, "incomes");
+      const activeAccount = getActiveAccount(data.accounts);
+      accLatter.value = activeAccount.title[0];
+      localStorage.setItem("currency", activeAccount.currency);
+
+      store.commit("costs/setCosts", data.costs.costs);
+      store.commit("costs/setGroups", groups);
+      store.commit("user/setBudget", data.budgets.items);
+      store.commit("user/setBalance", activeAccount.balance);
+      store.commit("incomes/setIncomes", data.incomes.incomes);
+      store.commit("incomes/setSources", sources);
+      store.commit("accounts/setAccounts", data.accounts);
+
+      balance.value = activeAccount.balance;
+      costsGarphData.value = data.costs.graphData;
+      incomesGarphData.value = data.incomes.incomeGraphData;
+      spendInMonth.value =
+        data.costs.costs[data.costs.costs.length - 1]?.spentByThisMonth | 0;
+      gainByPeriod.value =
+        data.incomes.incomes[data.incomes.incomes.length - 1]?.gainByPeriod | 0;
+
+      return {
+        costsGarphData: data.costs.graphData,
+        incomesGarphData: data.incomes.incomeGraphData,
+        groups,
+        sources,
+      };
+    }
+
+    const token = localStorage.getItem("token");
+    const accountId = localStorage.getItem("accountId");
+    isLoading.value = true;
+    const data = await useData(token, period, accountId);
+    isLoading.value = false;
+    if (data) {
+    data.incomes.incomeGraphData &&
+        data.incomes.incomeGraphData.days.length > 2
+          ? (incomesGraphShow.value = true)
+          : (incomesGraphShow.value = false);
+        data.costs.graphData && data.costs.graphData.days.length > 2
+          ? (costGraphShow.value = true)
+          : (costGraphShow.value = false);
+          const { groups, sources } = setFinDate(data);
+          this.setGraphOptions(costsGarphData.value, incomesGarphData.value, groups, sources);
+    } else {
+      localStorage.removeItem("token");
+      localStorage.removeItem("accountId");
+      this.$router.push("/");
+    }
+    return {
+      isLoading,
+      period,
+      incomesGraphShow,
+      costGraphShow,
+      balance,
+      accLatter,
+      incomesGarphData,
+      costsGarphData,
+      spendInMonth,
+      gainByPeriod
+    }
   },
   methods: {
     closeFirstTime() {
@@ -243,14 +355,14 @@ export default {
       }
     },
   },
-  async mounted() {
-    this.toggleOnboarding();
+  // async mounted() {
+  //   this.toggleOnboarding();
 
-    const { costsGarphData, incomesGarphData, groups, sources } =
-      await this.onMounted();
-    // TODO move this to another component
-    this.setGraphOptions(costsGarphData, incomesGarphData, groups, sources);
-  },
+  //   const { costsGarphData, incomesGarphData, groups, sources } =
+  //     await this.onMounted();
+  //   // TODO move this to another component
+  //   this.setGraphOptions(costsGarphData, incomesGarphData, groups, sources);
+  // },
 };
 </script>
 
