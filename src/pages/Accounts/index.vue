@@ -203,7 +203,8 @@ export default {
     },
     async changePeriod(newPeriod) {
       const token = localStorage.getItem("token");
-      const data = await getFinData(token, newPeriod);
+      const accountId = localStorage.getItem("accountId");
+      const data = await getFinData(token, newPeriod, accountId);
       if (data) {
         this.setFinDate(data);
         this.period = newPeriod;
