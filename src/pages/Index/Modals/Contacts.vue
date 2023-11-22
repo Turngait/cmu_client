@@ -32,7 +32,7 @@ export default {
 @import "/src/styles/main.scss";
 
 .overlay {
-  position: absolute;
+  position: fixed;
   height: 100%;
   width: 100%;
   background-color: $black-transp;

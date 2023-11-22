@@ -1,5 +1,10 @@
 [
   {
+    "version": "0.9.3",
+    "date": "22.11.2023",
+    "description": "Add new info on main page"
+  },
+  {
     "version": "0.9.2",
     "date": "16.10.2023",
     "description": "Fix layout bug with AddButton"

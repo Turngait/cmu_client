@@ -73,9 +73,9 @@
       }
 
       &__text {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
         width: 70rem;
-        line-height: 2.2rem;
+        line-height: 2.6rem;
 
         &__link {
           color: $black;
@@ -105,6 +105,7 @@
   }
 
   &__secondScreen {
+    background-color: $dark-base-color;
     color: $white;
     &__infoBox {
       padding: 5rem;
@@ -113,15 +114,16 @@
       gap: 10rem;
 
       &__item {
+        max-width: 45%;
         display: flex;
         flex-direction: column;
         gap: 2rem;
 
         &__text {
-          background: rgba(82, 82, 82, 0.85);
+          background: $black;
           border-radius: 5px;
           padding: 4.4rem;
-          font-size: 1.6rem;
+          font-size: 1.8rem;
         }
 
         &__imgBox {
@@ -133,8 +135,125 @@
     }
   }
 
+  &__thirdScreen {
+    background-color: $background-green;
+    color: $white;
+    &__infoBox {
+      padding: 5rem;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      gap: 5rem;
+
+      &__item {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 4rem;
+
+        &__text {
+          max-width: 45%;
+          background: $black;
+          border-radius: 5px;
+          padding: 4.4rem;
+          font-size: 1.8rem;
+          height: fit-content;
+        }
+
+        &__imgBox {
+          &__img {
+            width: 62rem;
+          }
+        }
+      }
+    }
+  }
+
+  &__fourthScreen {
+    background-color: $dark-base-color;
+    color: $white;
+    &__infoBox {
+      padding: 5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+
+      &__text {
+        font-size: 2.4rem;
+      }
+
+      &__flow {
+        &__item {
+          width: 80rem;
+          height: 45rem;
+        }
+      }
+
+    }
+  }
+
+  &__fifthsScreen {
+    background-color: $background-main-page;
+    color: $white;
+    &__infoBox {
+      padding: 5rem;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      gap: 5rem;
+
+      &__item {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 4rem;
+
+        &__text {
+          max-width: 45%;
+          background: $black;
+          border-radius: 5px;
+          padding: 4.4rem;
+          font-size: 1.8rem;
+          height: fit-content;
+
+          &__link {
+            color: $white;
+          }
+        }
+
+        &__icoItem {
+          &__link {
+            color: $black;
+            font-size: 1.8rem;
+            font-weight: 700;
+          }
+  
+          &__img {
+            width: 6rem;
+          }
+        }
+      }
+
+      &__iconsBox {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-bottom: 6rem;
+  
+        &__ico {
+          transition-duration: 0.7s;
+          width: 9rem;
+  
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+
   &__footer {
-    background: rgba(82, 82, 82, 0.85);
+    background: $black;
     padding: 3rem 5rem;
     font-size: $normal-font-size;
     display: flex;
@@ -163,9 +282,19 @@
 }
 
 @media all and (min-width: 0) and (max-width: 1000px) {
-  .dashboard__secondScreen__infoBox {
+  .dashboard__secondScreen__infoBox,
+  .dashboard__thirdScreen__infoBox__item,
+  .dashboard__fifthsScreen__infoBox__item {
     flex-direction: column;
     gap: 4rem;
+  }
+  .dashboard__thirdScreen__infoBox__item__text,
+  .dashboard__fifthsScreen__infoBox__item__text {
+    max-width: 80%;
+  }
+
+  .dashboard__fourthScreen__infoBox__flow__item {
+    width: 90%;
   }
 }
 
@@ -175,13 +304,31 @@
     justify-content: flex-end;
     padding: 2rem;
   }
-  .dashboard__header {
+  .dashboard__secondScreen__infoBox__item {
+    max-width: none;
+  }
+  .dashboard__header,
+  .dashboard__thirdScreen__infoBox,
+  .dashboard__fourthScreen__infoBox,
+  .dashboard__fifthsScreen__infoBox,
+  .dashboard__footer {
     padding: 2rem;
+  }
+
+  .dashboard__thirdScreen__infoBox__item__text,
+  .dashboard__fifthsScreen__infoBox__item__text,
+  .dashboard__secondScreen__infoBox__item__text {
+    max-width: 99%;
+    padding: 2.5rem;
+    font-size: 1.6rem;
   }
 
   .dashboard__secondScreen__infoBox__item__text {
     padding: 2.5rem;
     font-size: 1.6rem;
+  }
+  .dashboard__thirdScreen__infoBox__item__imgBox__img {
+    width: 90%;
   }
 }
 
@@ -205,6 +352,9 @@
   .dashboard__footer {
     flex-direction: column;
     gap: 1rem;
+  }
+  .dashboard__fifthsScreen__infoBox__iconsBox__ico {
+    width: 6rem;
   }
 }
 
