@@ -44,6 +44,9 @@
         >
           Ru
         </button>
+        <a href="https://t.me/calcmeup" target="_blanc">
+          <img class="dashboard__header__nav__icon" src="../../assets/icons/tg-ico.svg" alt="Tg channel" />
+        </a>
       </section>
     </header>
     <div class="dashboard__firstScreen">
@@ -194,6 +197,9 @@
             <br />
             <br />
             {{ $t("index.thirdScreen.text9") }}
+            <br />
+            <br />
+            {{ $t("index.thirdScreen.text10") }}
           </div>
           <div class="dashboard__thirdScreen__infoBox__item__imgBox">
             <img
@@ -226,17 +232,25 @@
             <br />
             {{ $t("index.fifthsScreen.text3") }}
           </div>
-            <div className="dashboard__fifthsScreen__infoBox__iconsBox">
-              <a href="https://www.typescriptlang.org/" target="_blanc"><img className="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/ts-ico.png" alt="TypeScript" title="TypeScript" /></a>
-              <a href="https://react.dev/" target="_blanc"><img className="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/vue-ico.png" alt="VueJS" title="VueJS" /></a>
-              <a href="https://nestjs.com/" target="_blanc"><img className="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/nest-ico.png" alt="NestJS" title="NestJS" /></a>
-              <a href="https://flask.palletsprojects.com/en/3.0.x/" target="_blanc"><img className="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/flask-ico.png" alt="Flask" title="Flask" /></a>
-              <a href="https://www.mongodb.com/" target="_blanc"><img className="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/mysql-ico.png" alt="MongoDB" title="MongoDB" /></a>
-              <a href="https://redis.io/" target="_blanc"><img className="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/redis-ico.png" alt="Redis" title="Redis" /></a>
-              <a href="https://www.docker.com/" target="_blanc"><img className="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/docker-ico.png" alt="Docker" title="Docker" /></a>
+            <div class="dashboard__fifthsScreen__infoBox__iconsBox">
+              <a href="https://www.typescriptlang.org/" target="_blanc"><img class="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/ts-ico.png" alt="TypeScript" title="TypeScript" /></a>
+              <a href="https://vuejs.org/" target="_blanc"><img class="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/vue-ico.png" alt="VueJS" title="VueJS" /></a>
+              <a href="https://nestjs.com/" target="_blanc"><img class="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/nest-ico.png" alt="NestJS" title="NestJS" /></a>
+              <a href="https://flask.palletsprojects.com/en/3.0.x/" target="_blanc"><img class="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/flask-ico.png" alt="Flask" title="Flask" /></a>
+              <a href="https://www.mysql.com/" target="_blanc"><img class="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/mysql-ico.png" alt="MongoDB" title="MongoDB" /></a>
+              <a href="https://redis.io/" target="_blanc"><img class="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/redis-ico.png" alt="Redis" title="Redis" /></a>
+              <a href="https://www.docker.com/" target="_blanc"><img class="dashboard__fifthsScreen__infoBox__iconsBox__ico" src="../../assets/icons/techs/docker-ico.png" alt="Docker" title="Docker" /></a>
             </div>
         </div>
-
+        <div class="dashboard__fifthsScreen__infoBox__historyBox">
+            <p @click="toggleOpenDevLogs" class="dashboard__fifthsScreen__infoBox__historyBox__title">+ History of development logs</p>
+              <div class="dashboard__fifthsScreen__infoBox__historyBox__history" v-if="isHistoryOpen">
+                <div :key="item.version" v-for="item in devLogs" class="dashboard__fifthsScreen__infoBox__historyBox__history__item">
+                  <p class="dashboard__fifthsScreen__infoBox__historyBox__history__item__date">{{item.date}}</p>
+                  <p class="dashboard__fifthsScreen__infoBox__historyBox__history__item__description">{{item.description}}</p>
+                </div>
+              </div>
+          </div>
         <div class="dashboard__fifthsScreen__infoBox__item">
           <div
             class="dashboard__fifthsScreen__infoBox__item__icoItem flexBox alignTextCenter"
@@ -278,17 +292,24 @@
       </div>
     </div>
 
-    <div class="dashboard__footer">
-      <p>2023 CalcMeUp</p>
-      <p>
-        <a class="dashboard__footer__link" href="terms.html" target="_blank">{{
-          $t("index.policy")
-        }}</a>
-      </p>
-      <p class="dashboard__footer__link" @click="toggleOpenContacts">
-        {{ $t("common.contacts") }}
-      </p>
-    </div>
+    <footer class="dashboard__footer">
+      <div class="dashboard__footer__leftBox">
+        <p>2023 CalcMeUp</p>
+        <p>
+          <a class="dashboard__footer__link" href="terms.html" target="_blank">{{
+            $t("index.policy")
+          }}</a>
+        </p>
+        <p class="dashboard__footer__link" @click="toggleOpenContacts">
+          {{ $t("common.contacts") }}
+        </p>
+      </div>
+      <div class="dashboard__footer__rightBox">
+        <a href="https://t.me/calcmeup" target="_blanc">
+          <img class="dashboard__footer__rightBox__icon" src="../../assets/icons/tg-ico.svg" alt="Tg channel" />
+        </a>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -303,6 +324,7 @@ import { recoveryEmailService } from "./services";
 import { ENDPOINTS } from "../../config/api";
 import { EMAIL } from "../../config/api";
 import API_KEY from "../../config/key";
+import DevData from "../../assets/release.json";
 
 export default {
   name: "index-main",
@@ -313,6 +335,8 @@ export default {
       signInOpen: false,
       isContactsOpen: false,
       email: EMAIL,
+      isHistoryOpen: false,
+      devLogs: []
     };
   },
   components: {
@@ -362,10 +386,16 @@ export default {
       window.scrollTo(0, 0);
       this.isContactsOpen = !this.isContactsOpen;
     },
+
+    toggleOpenDevLogs() {
+      this.isHistoryOpen = !this.isHistoryOpen;
+    }
   },
   async mounted() {
     const locale = localStorage.getItem("locale");
     if (locale) this.switchLocale(locale);
+    this.devLogs = DevData;
+    console.log(DevData);
     // await this.checkApiService();
   },
 };

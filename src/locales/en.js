@@ -72,7 +72,8 @@ export default {
       text6: "In near future we add feature that give you possibility set goals for how much money you want to earn in a day or month.",
       text7: "Also this app has a Dashboard with different graphs.",
       text8: "You can see a statistics of your expenses and incomes by days, by groups, etc.",
-      text9: "In future we plan to add more graphs for better accounting."
+      text9: "In future we plan to add more graphs for better accounting.",
+      text10: "Also there are other features on different pages, as a Accounts, Budgets, Groups pages, etc"
     },
     fourthScreen: {
       text1: "This is application’s UserFlow. Some features was had released already.  Some will be added in future."
