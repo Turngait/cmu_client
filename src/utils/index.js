@@ -158,3 +158,16 @@ export function getHistoryBudgetItems(budget_id, costs, incomes) {
   }
   return { costs: historyCosts, incomes: historyIncomes };
 }
+
+
+export async function signOut(token) {
+  return await fetch(ENDPOINTS.users.signOut, {
+    mode: "cors",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "API-KEY": KEYS.API_KEY,
+    },
+    body: JSON.stringify({ token }),
+  }).then((res) => res.json());
+}

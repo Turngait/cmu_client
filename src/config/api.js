@@ -7,6 +7,7 @@ function getEndpoints() {
     users: {
       signIn: API_URL + "/user/signin",
       signUp: API_URL + "/user/signup",
+      signOut: API_URL + "/user/signout",
       changeName: API_URL + "/user/setname",
       changePass: API_URL + "/user/changepassword",
       getInitData: API_URL + "/user/getdata",
