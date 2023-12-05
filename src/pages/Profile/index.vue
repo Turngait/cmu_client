@@ -1,6 +1,7 @@
 <template>
   <Preloader v-if="isLoading" />
   <div class="profile" v-else>
+    <DeleteAllModal :onClose="toggleDeleteAllModalHandler" :onSubmit="onDeleteAll" v-if="isDeleteAllOpen"/>
     <TopMenu
       :logOut="logOut"
       :pageName="$t('common.profile')"
@@ -46,6 +47,18 @@
           />
         </div>
       </div>
+
+      <div class="profile__container__settings">
+        <div class="profile__container__settings__item">
+          <h3 class="profile__container__settings__item__header">
+            {{ $t("user.deleteAll") }}
+          </h3>
+          <Button
+            :onClick="toggleDeleteAllModalHandler"
+            :title="$t('common.delete')"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +70,8 @@ import TopMenu from "../../components/partials/TopMenu.vue";
 import Preloader from "../../components/partials/Preloader.vue";
 import Button from "../../components/controls/Button.vue";
 import TextInput from "../../components/controls/TextInput.vue";
+import DeleteAllModal from './Components/DeleteAllModal.vue';
+import { deleteAllInformationService } from "./services";
 
 import {
   changeNameService,
@@ -80,6 +95,7 @@ export default {
       oldPass: "",
       newPass: "",
       email: "",
+      isDeleteAllOpen: false,
     };
   },
   validations() {
@@ -93,6 +109,7 @@ export default {
     Preloader,
     TextInput,
     Button,
+    DeleteAllModal
   },
   methods: {
     isLoadingToggle(state) {
@@ -146,6 +163,14 @@ export default {
         this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
+    toggleDeleteAllModalHandler() {
+      this.isDeleteAllOpen = !this.isDeleteAllOpen;
+    },
+    async onDeleteAll() {
+      const token = localStorage.getItem("token");
+      const result = await deleteAllInformationService(token);
+      if(result.status === 200) this.logOut();
+    }
   },
   async mounted() {
     await this.onMounted();

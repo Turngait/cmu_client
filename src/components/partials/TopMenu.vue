@@ -14,7 +14,7 @@
         </h1>
         <div class="topMenu__balance">{{ pageName }}</div>
         <div class="topMenu__balance">
-          {{ $t("user.balance") }}: {{ balance }}
+          {{ $t("user.balance") }}: {{ Number.parseFloat(balance).toFixed(2) }}
         </div>
       </div>
       <div class="topMenu__miniBox topMenu__secondBox">

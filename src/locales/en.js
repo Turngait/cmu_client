@@ -5,6 +5,7 @@ export default {
     save: "Save",
     add: "Add",
     ok: "Ok",
+    delete: "Delete",
     dashboard: "Dashboard",
     costs: "Expenses",
     costsByGroups: "Expenses by groups",
@@ -96,6 +97,8 @@ export default {
     costsGroups: "Cost's groups",
     incomesSources: "Income's sources",
     name: "Name",
+    deleteAll: "Delete all information",
+    deleteAllInformation: "This action will delete all your information in this application. After deletion will be completed you cant recover your data."
   },
   costs: {
     add: "Add expense",

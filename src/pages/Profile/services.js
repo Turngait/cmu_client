@@ -55,3 +55,15 @@ export async function getInitialDataService(token, accountId, setInfo) {
       setInfo(data);
     });
 }
+
+export async function deleteAllInformationService(token) {
+  return await fetch(ENDPOINTS.users.deleteAll, {
+    mode: "cors",
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "API-KEY": KEYS.API_KEY,
+    },
+    body: JSON.stringify({ token }),
+  }).then((res) => res.json());
+}

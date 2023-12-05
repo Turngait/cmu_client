@@ -12,6 +12,7 @@ function getEndpoints() {
       changePass: API_URL + "/user/changepassword",
       getInitData: API_URL + "/user/getdata",
       recoveryPass: API_URL + "/user/restorepass",
+      deleteAll: API_URL + "/user/deleteuser"
     },
     costs: {
       add: API_URL + "/costs",
