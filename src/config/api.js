@@ -1,16 +1,18 @@
 export const API_URL = "http://127.0.0.1:5000";
 // export const API_URL = "http://194.67.104.32:5000";
-export const EMAIL = "info@fin-cloud.ru";
+export const EMAIL = "ilya_ry@yahoo.com";
 
 function getEndpoints() {
   return {
     users: {
       signIn: API_URL + "/user/signin",
       signUp: API_URL + "/user/signup",
+      signOut: API_URL + "/user/signout",
       changeName: API_URL + "/user/setname",
       changePass: API_URL + "/user/changepassword",
       getInitData: API_URL + "/user/getdata",
       recoveryPass: API_URL + "/user/restorepass",
+      deleteAll: API_URL + "/user/deleteuser"
     },
     costs: {
       add: API_URL + "/costs",

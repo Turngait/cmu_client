@@ -30,7 +30,7 @@ npm install
 cd src/config
 cp key.example.js key.js
 ```
-Fill API_KEY in key.js file
+Add API_KEY in key.js file
 
 ### Run in dev mode
 ```

@@ -5,10 +5,14 @@
 </template>
 
 <script>
+import { signOut } from "@/utils"
+
 export default {
   name: "overlay-std",
   methods: {
     logOut() {
+      const token = localStorage.getItem("token");
+      signOut(token);
       localStorage.removeItem("token");
       localStorage.removeItem("accountId");
       this.$store.commit("user/resetState");

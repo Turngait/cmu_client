@@ -357,9 +357,11 @@ export default {
       // TODO Optimize code
       this.isLoadingToggle(true);
       const token = localStorage.getItem("token");
+      const accountId = localStorage.getItem("accountId");
       const { costs, budgets, accounts, targets } = await getFinData(
         token,
-        newPeriod
+        newPeriod,
+        accountId
       );
       const activeAccount = getActiveAccount(accounts);
       this.isLoadingToggle(false);

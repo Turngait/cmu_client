@@ -5,6 +5,7 @@ export default {
     save: "Save",
     add: "Add",
     ok: "Ok",
+    delete: "Delete",
     dashboard: "Dashboard",
     costs: "Expenses",
     costsByGroups: "Expenses by groups",
@@ -43,26 +44,47 @@ export default {
     yourName: "Your name...",
     accountTitle: "Account title...",
     initBalance: "Initial balance...",
-    descAtSignUp: "By pressing SignUp button you aare agree with ",
+    descAtSignUp: "By pressing SignUp button you are agree with ",
     emailContact:
       "If you have any questions or suggestions, you can write to us at ",
     about:
-      "This is a handy app for keeping track of your personal finances. Here you can easily keep statistics of your finances. Work with income, expenses and accounts. And it's absolutely free.",
+      "This is an app for keeping track of your personal finances. Here you can easily keep statistics of your finances. Work with income, expenses and accounts. And it's absolutely free.",
     about2:
-      "It is open-source application. It is totaly free for re-using. You can check it's code at repos:",
+      "It is open-source application. It is totally free for re-using. You can check it's code at repos:",
     secondAbout1:
-      "With this app you can easily keep track of all your income and expenses.",
+      "With this app you can easily keep track of all your income and expenses. Also you can create different budgets and distribute money between budgets",
     secondAbout2:
-      "Statistics graphs will show you how much money you have spent or received every day.",
+      "In this app statistics graphs will show you how much money you have spent or received every day.",
     secondAbout3:
-      "In the application, you can create multiple accounts to keep records in different currencies.",
+      "Also, you can create multiple accounts to keep records in different currencies.",
     secondAbout4:
-      "It is absolutely free. To start using it, you only need to register.",
+      "It is absolutely free. To start using it, you only need to register. For now, beta version is deployed. ",
     secondAbout5:
       "This application is not a commercial product and we do not sell your data to third parties.",
     secondAbout6:
       "Our app is constantly evolving and new features are being added.",
     secondAbout7: "It displays correctly on various devices and platforms.",
+    thirdScreen: {
+      text1: "At a expenses screen you can add your expenses for every day. All expenses you can group by budgets and groups.",
+      text2: "You can also set goals for how much money you can spend in a day or month.",
+      text3: "And you can view the history of your expenses by groups or budgets.",
+      text4: "On incomes screen you can account all your incomes. You can group it by sources and budgets.",
+      text5: "And you can view the history of your expenses by groups or budgets.",
+      text6: "In near future we add feature that give you possibility set goals for how much money you want to earn in a day or month.",
+      text7: "Also this app has a Dashboard with different graphs.",
+      text8: "You can see a statistics of your expenses and incomes by days, by groups, etc.",
+      text9: "In future we plan to add more graphs for better accounting.",
+      text10: "Also there are other features on different pages, as a Accounts, Budgets, Groups pages, etc"
+    },
+    fourthScreen: {
+      text1: "This is application’s UserFlow. Some features was had released already.  Some will be added in future."
+    },
+    fifthsScreen: {
+      text1: "For now, beta version is deployed. In future we will add new features.",
+      text2: "In this app we use different technology. Some of them you can see here.",
+      text3: "This app is absolutely free and it is open-source project. You can find all app’s code in GitHub repos. Feel free to re-use it if you need.",
+      text4: "If you want to contact us, you can write on this ",
+    }
   },
   user: {
     balance: "Balance",
@@ -75,6 +97,8 @@ export default {
     costsGroups: "Cost's groups",
     incomesSources: "Income's sources",
     name: "Name",
+    deleteAll: "Delete all information",
+    deleteAllInformation: "This action will delete all your information in this application. After deletion will be completed you cant recover your data."
   },
   costs: {
     add: "Add expense",

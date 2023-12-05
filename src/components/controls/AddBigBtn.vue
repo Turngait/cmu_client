@@ -17,7 +17,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   background: #099bbb;
   border-radius: 50px;
   font-size: 6rem;

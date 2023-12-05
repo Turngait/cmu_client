@@ -158,7 +158,9 @@ export default {
     async changePeriod(newPeriod) {
       this.isLoadingToggle(true);
       const token = localStorage.getItem("token");
-      const data = await getFinData(token, newPeriod);
+      const accountId = localStorage.getItem("accountId");
+      
+      const data = await getFinData(token, newPeriod, accountId);
       this.isLoadingToggle(false);
       if (data) {
         const activeAccount = getActiveAccount(data.accounts);

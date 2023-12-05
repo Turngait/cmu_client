@@ -1,4 +1,4 @@
-!<template>
+<template>
     <PopUp
     :header="text"
     :onClose="onClose"
@@ -31,7 +31,8 @@ export default {
 .dialogModal {
   &__btnBox {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 1.4rem
   }
 }
 </style>
