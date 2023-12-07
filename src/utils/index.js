@@ -61,8 +61,10 @@ export function calculateGroupSum(items, type = "costs") {
 export function addSumOfGroupsOnTargets(targets, items) {
   const { groups } = calculateGroupSum(items);
   for (const group of groups) {
-    for (const target of targets.month) {
-      if (+target.group_id === +group.id) target.groupSum = group.sum;
+    if(targets.month && targets.month.length) {
+      for (const target of targets.month) {
+        if (+target.group_id === +group.id) target.groupSum = group.sum;
+      }
     }
   }
 

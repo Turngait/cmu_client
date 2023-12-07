@@ -54,14 +54,18 @@ export default {
           ? numberFormat(this.data.spentByDay)
           : 0,
       currency: "USD",
-      dailyTarget: this.targets?.day[0]?.amount || 0,
+      dailyTarget: 0,
       isTargetExceeded: false,
     };
   },
   mounted() {
-    this.isTargetExceeded = this.data
-      ? this.data.spentByDay > this.dailyTarget
-      : false;
+    if(this.targets && this.targets.day && this.targets.day.length) {
+      this.dailyTarget = this.targets.day[0].amount;
+      this.isTargetExceeded = this.data
+        ? this.data.spentByDay > this.dailyTarget
+        : false;
+    }
+
     this.currency = localStorage.getItem("currency");
   },
   updated() {
@@ -71,7 +75,9 @@ export default {
       costPerDay += item.amount;
     }
     this.spentByDay = costPerDay;
-    this.dailyTarget = this.targets?.day[0]?.amount;
+    if(this.targets && this.targets.day && this.targets.day.length) {
+      this.dailyTarget = this.targets.day[0].amount;
+    }
   },
 };
 </script>

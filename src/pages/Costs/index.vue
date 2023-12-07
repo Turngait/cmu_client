@@ -50,6 +50,7 @@
                 {{ $t("costs.targetsManagement") }}
               </button>
               <button
+                v-if="this.targets.month.length"
                 @click="isMonthlyTargetsOpenToggle"
                 class="costs__container__targetsBox__openTManagementBtn"
               >
@@ -320,10 +321,6 @@ export default {
       if (!this.costs.length || !this.balance.length || !this.budgets.length) {
         await this.getData();
       }
-      this.inThisMonth =
-        this.costs.length > 0
-          ? this.costs[this.costs.length - 1].spentByThisMonth
-          : 0;
     },
     async getData() {
       const token = localStorage.getItem("token");
@@ -339,11 +336,8 @@ export default {
       this.budgets = budgets;
       this.balance = activeAccount.balance;
       this.costs = costs.costs;
-      this.targets = addSumOfGroupsOnTargets(targets, costs);
-      this.inThisMonth =
-        this.costs.length > 0
-          ? this.costs[this.costs.length - 1].spentByThisMonth
-          : 0;
+      if (targets.month) this.targets = addSumOfGroupsOnTargets(targets, costs);
+      this.inThisMonth = costs.statistics.spentByMonth;
       this.setDataToStore(costs, budgets, activeAccount.balance, targets);
     },
     setDataToStore(costs, budget, balance, targets) {
@@ -373,10 +367,7 @@ export default {
         this.budgets = budgets;
         this.balance = activeAccount.balance;
         this.period = newPeriod;
-        this.inThisMonth =
-          this.costs.length > 0
-            ? this.costs[this.costs.length - 1].spentByThisMonth
-            : 0;
+        this.inThisMonth = costs.statistics.spentByMonth;
         this.$store.commit("user/setMonth", newPeriod);
       }
     },

@@ -48,7 +48,7 @@ export default {
     emailContact:
       "If you have any questions or suggestions, you can write to us at ",
     about:
-      "This is an app for keeping track of your personal finances. Here you can easily keep statistics of your finances. Work with income, expenses and accounts. And it's absolutely free.",
+      "This is an app for keeping track of your personal finances. Here you can easily keep statistics of your finances. Work with income, expenses and accounts. And it's absolutely free. But steel it is in Beta release. There are can be different bugs and issues.",
     about2:
       "It is open-source application. It is totally free for re-using. You can check it's code at repos:",
     secondAbout1:
