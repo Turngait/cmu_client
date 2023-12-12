@@ -53,7 +53,7 @@
 
 <script>
 import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, minValue, helpers } from "@vuelidate/validators";
 
 import PopUp from "../../../components/partials/PopUp.vue";
 import Button from "../../../components/controls/Button.vue";
@@ -86,9 +86,15 @@ export default {
     };
   },
   validations() {
+    const mustBeCurrency = helpers.regex(/^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/);
+
     return {
       title: { required },
-      amount: { required },
+      amount: {
+        minValueValue: minValue(0), 
+        required,
+        mustBeCurrency
+      },
     };
   },
   components: {

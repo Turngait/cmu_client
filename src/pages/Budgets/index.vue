@@ -21,6 +21,12 @@
       :onClose="closeEditBudget"
       :editBudget="editBudget"
     />
+    <TransferBetweenBudgetsModal 
+      v-if="isTransferModalOpen"
+      :budgets="budgets"
+      :onClose="toggleOpenTransferModal"
+      :onTransfer="startTransferHandler"
+    />
     <TopMenu
       :logOut="logOut"
       :pageName="$t('common.budgets')"
@@ -31,6 +37,10 @@
     />
     <div class="budgets__container">
       <p class="budgets__msg">{{ msg }}</p>
+      <BudgetsManagement
+        :onClickTransfer="toggleOpenTransferModal"
+        :isTransferPossible="isTransferPossible"
+      />
       <div class="budgets__box">
         <Budget
           v-for="item of budgets"
@@ -57,6 +67,8 @@ import BudgetHistoryModal from "./Modals/BudgetHistoryModal.vue";
 import AddBigBtn from "../../components/controls/AddBigBtn.vue";
 import FirstTimeBudgets from "../../components/onboarding/FirstTimeBudgets.vue";
 import DialogModal from "@/components/partials/DialogModal.vue";
+import BudgetsManagement from "./Components/BudgetsManagement.vue";
+import TransferBetweenBudgetsModal from "./Modals/TransferBetweenBudgetsModal.vue";
 
 import {
   getActiveAccount,
@@ -68,6 +80,7 @@ import {
   saveBudgetService,
   deleteBudgetService,
   editBudgetService,
+  transferMoneyBetweenBudgetsService,
 } from "./services";
 
 export default {
@@ -80,7 +93,7 @@ export default {
       msg: "",
       balance: 0,
       period: this.$store.state.user.month,
-      currency: "руб",
+      currency: "$",
       accLatter: "",
       isHistoryOpen: false,
       costs: [],
@@ -95,6 +108,8 @@ export default {
       dialogModalOpen: false,
       dialogModalText: "",
       dialogModalOnSubmit: null,
+      isTransferModalOpen: false,
+      isTransferPossible: false
     };
   },
   components: {
@@ -105,9 +120,18 @@ export default {
     EditBudgetModal,
     BudgetHistoryModal,
     FirstTimeBudgets,
-    DialogModal
+    DialogModal,
+    BudgetsManagement,
+    TransferBetweenBudgetsModal
   },
   methods: {
+    toggleOpenTransferModal() {
+      this.isTransferModalOpen = !this.isTransferModalOpen;
+    },
+    async startTransferHandler(fromId, toId, amount) {
+      const token = localStorage.getItem("token");
+      await transferMoneyBetweenBudgetsService(fromId, toId, amount, token);
+    },
     logOut() {
       localStorage.removeItem("token");
       localStorage.removeItem("accountId");
@@ -241,6 +265,8 @@ export default {
       this.accLatter = activeAccount.title[0];
       this.currency = activeAccount.currency;
       localStorage.setItem("currency", activeAccount.currency);
+      // TODO In development
+      // this.isTransferPossible = budgets.length > 1;
       this.budgets = budgets;
       this.balance = activeAccount.balance;
       this.costs = costs.costs;

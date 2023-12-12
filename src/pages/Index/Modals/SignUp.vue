@@ -92,7 +92,7 @@ export default {
       password: "",
       accountTitle: "",
       initialBalance: 0,
-      currency: "руб",
+      currency: "$",
       msg: "",
       currencies,
     };

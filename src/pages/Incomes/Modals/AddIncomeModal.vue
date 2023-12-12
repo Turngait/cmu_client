@@ -53,7 +53,7 @@
 
 <script>
 import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required,  minValue, helpers } from "@vuelidate/validators";
 import Button from "../../../components/controls/Button.vue";
 import TextInput from "../../../components/controls/TextInput.vue";
 import TxtArea from "../../../components/controls/TxtArea.vue";
@@ -83,9 +83,14 @@ export default {
     };
   },
   validations() {
+    const mustBeCurrency = helpers.regex(/^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/);
     return {
       title: { required },
-      amount: { required },
+      amount: { 
+        required,
+        mustBeCurrency,
+        minValueValue: minValue(0), 
+       },
     };
   },
   methods: {

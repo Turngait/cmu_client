@@ -58,7 +58,7 @@ export default {
     return {
       title: "",
       description: "",
-      currency: "руб",
+      currency: "$",
       amount: 0,
     };
   },

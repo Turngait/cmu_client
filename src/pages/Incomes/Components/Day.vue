@@ -41,7 +41,7 @@ export default {
         this.data && this.data.gainByDay
           ? numberFormat(this.data.gainByDay)
           : 0,
-      currency: "руб",
+      currency: "$",
     };
   },
   components: {

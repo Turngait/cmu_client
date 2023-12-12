@@ -96,3 +96,7 @@ export async function editBudgetService(budget, token, setErrors) {
     return false;
   });
 }
+
+export async function transferMoneyBetweenBudgetsService(fromId, toId, amount, token) {
+  console.log(fromId, toId, amount, token);
+}

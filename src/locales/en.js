@@ -27,7 +27,7 @@ export default {
   },
   msg: {
     titleReg: "Fullfill title field",
-    amountReg: "Fullfill amount field",
+    amountReg: "Fullfill amount field correctly",
   },
   dashboard: {
     notEnoughData:
@@ -145,6 +145,13 @@ export default {
     spent: "Spent",
     noHistoryCosts: "No costs at this month",
     noHistoryIncomes: "No incomes at this month",
+    transferBetweenBudgets: "Transfer between budgets",
+    amount: "Amount",
+    transfer: {
+      from: "From",
+      to: "To",
+      start: "Start Transfer"
+    }
   },
   accounts: {
     accounts: "Accounts",

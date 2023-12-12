@@ -122,6 +122,7 @@ export default {
     spent: "Потрачено",
     noHistoryCosts: "Нет расходов за этот месяц",
     noHistoryIncomes: "Нет доходов за этот месяц",
+    transferBetweenBudgets: "перемещение между счетами"
   },
   accounts: {
     accounts: "Учетные записи",
