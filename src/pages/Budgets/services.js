@@ -97,6 +97,34 @@ export async function editBudgetService(budget, token, setErrors) {
   });
 }
 
-export async function transferMoneyBetweenBudgetsService(fromId, toId, amount, token) {
-  console.log(fromId, toId, amount, token);
+export async function transferMoneyBetweenBudgetsService(from_budget_id, to_budget_id, amount, token, setErrors) {
+  return await fetch(ENDPOINTS.budgets.transfer, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({ 
+      from_budget_id,
+      to_budget_id,
+      amount
+     }),
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "API-KEY": KEYS.API_KEY,
+      TOKEN: token,
+    },
+  }).then(async (res) => {
+    if (res.status === 200) {
+      return true;
+    } else if (res.status === 422) {
+      const data = await res.json();
+      if (data.errors) {
+        const { errors } = data.errors;
+        setErrors(errors[0].msg);
+        return false;
+      }
+    } else {
+      setErrors(res.status);
+      return false;
+    }
+    return false;
+  });
 }

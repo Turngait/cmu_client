@@ -1,5 +1,10 @@
 [
   {
+    "version": "0.9.7",
+    "date": "14.12.2023",
+    "description": "Add new feature - transfer money between budgets."
+  },
+  {
     "version": "0.9.6",
     "date": "12.12.2023",
     "description": "Add additional validators in modals."

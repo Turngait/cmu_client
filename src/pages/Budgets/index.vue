@@ -1,5 +1,6 @@
 <template>
-  <div class="budgets">
+  <Preloader v-if="isLoading" />
+  <div v-else class="budgets">
     <FirstTimeBudgets v-if="onBoarding.firstTime" :onClose="closeFirstTime" />
     <DialogModal v-if="dialogModalOpen" :text="dialogModalText" :onClose="closeDialogModal" :onSubmit="dialogModalOnSubmit"/>
     <BudgetHistoryModal
@@ -87,6 +88,7 @@ export default {
   name: "budgets-main",
   data() {
     return {
+      isLoading: false,
       isAddBudgetOpen: false,
       budgets: [],
       editingBudget: null,
@@ -130,7 +132,10 @@ export default {
     },
     async startTransferHandler(fromId, toId, amount) {
       const token = localStorage.getItem("token");
-      await transferMoneyBetweenBudgetsService(fromId, toId, amount, token);
+      const result = await transferMoneyBetweenBudgetsService(fromId, toId, amount, token, (msg) => (this.msg = msg));
+      this.toggleOpenTransferModal();
+
+      if(result) await this.onMount();
     },
     logOut() {
       localStorage.removeItem("token");
@@ -162,6 +167,8 @@ export default {
       this.editingBudget = null;
     },
     async addBudget(budget) {
+      this.isLoading = true;
+
       const token = localStorage.getItem("token");
       // TODO Add balance
       const result = await saveBudgetService(
@@ -172,6 +179,8 @@ export default {
         },
         (msg) => (this.msg = msg)
       );
+      this.isLoading = false;
+
       if (result) {
         this.$store.commit("user/setBudget", this.budgets);
         this.addBudgetToggle();
@@ -186,6 +195,8 @@ export default {
       this.dialogModalOpen = true;
     },
     async deleteBudget(id) {
+      this.isLoading = true;
+
       this.dialogModalOpen = false;
       const token = localStorage.getItem("token");
       const isDeleted = await deleteBudgetService(
@@ -193,6 +204,8 @@ export default {
         token,
         (msg) => (this.msg = msg)
       );
+      this.isLoading = false;
+
       if (isDeleted) {
         this.budgets = this.budgets.filter((budget) => budget.id !== id);
         this.$toast.info(this.$t("notifications.budgetOnDelete"));
@@ -205,12 +218,14 @@ export default {
       this.editingBudget = editingBudget[0];
     },
     async editBudget(budget) {
+      this.isLoading = true;
       const token = localStorage.getItem("token");
       const result = await editBudgetService(
         budget,
         token,
         (msg) => (this.msg = msg)
       );
+      this.isLoading = false;
       if (result) {
         for (let item of this.budgets) {
           if (item.id === budget.id) item.title = budget.title;
@@ -222,9 +237,12 @@ export default {
       }
     },
     async changePeriod(newPeriod) {
+      this.isLoading = true;
       const token = localStorage.getItem("token");
       const accountId = localStorage.getItem("accountId");
       const data = await getFinData(token, newPeriod, accountId);
+      this.isLoading = false;
+
       if (data) {
         this.setFinDate(data);
         this.period = newPeriod;
@@ -252,6 +270,8 @@ export default {
       localStorage.setItem("onBFirstTimeBudgets", true);
     },
     async onMount() {
+      this.isLoading = true;
+
       const token = localStorage.getItem("token");
       const accountId = localStorage.getItem("accountId");
 
@@ -261,12 +281,13 @@ export default {
         month,
         accountId
       );
+      this.isLoading = false;
+
       const activeAccount = getActiveAccount(accounts);
       this.accLatter = activeAccount.title[0];
       this.currency = activeAccount.currency;
       localStorage.setItem("currency", activeAccount.currency);
-      // TODO In development
-      // this.isTransferPossible = budgets.length > 1;
+      this.isTransferPossible = budgets.length > 1;
       this.budgets = budgets;
       this.balance = activeAccount.balance;
       this.costs = costs.costs;

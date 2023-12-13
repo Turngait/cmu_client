@@ -33,6 +33,7 @@ function getEndpoints() {
       add: API_URL + "/budgets",
       delete: API_URL + "/budgets",
       edit: API_URL + "/budgets",
+      transfer: API_URL + "/budgets/transferbetweenbudgets"
     },
     accounts: {
       add: API_URL + "/accounts",
