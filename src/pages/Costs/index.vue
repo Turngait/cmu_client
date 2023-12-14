@@ -38,45 +38,20 @@
       <!-- TODO Move this to another component -->
       <div class="costs__container">
         <div v-if="costs.length > 0">
-          <div class="costs__container__targetsBox">
-            <h3 class="costs__total">
-              {{ $t("common.inThisMonth") }}: {{ inThisMonth }} {{ currency }}
-            </h3>
-            <div class="costs__container__targetsBox__targetManagement">
-              <button
-                @click="targetManagementToggle"
-                class="costs__container__targetsBox__openTManagementBtn"
-              >
-                {{ $t("costs.targetsManagement") }}
-              </button>
-              <button
-                v-if="this.targets.month.length"
-                @click="isMonthlyTargetsOpenToggle"
-                class="costs__container__targetsBox__openTManagementBtn"
-              >
-                {{
-                  !isMonthlyTargetsOpen
-                    ? $t("costs.showMonthlyTarget")
-                    : $t("costs.hideMonthlyTarget")
-                }}
-              </button>
-            </div>
-          </div>
-          <div
-            class="costs__container__monthlyTargetsBox"
+          <CostsInfo
+            :inThisMonth="inThisMonth"
+            :currency="currency"
+            :targetManagementToggle="targetManagementToggle"
+            :showMonthTargets="this.targets.month.length"
+            :isMonthlyTargetsOpen="isMonthlyTargetsOpen"
+            :isMonthlyTargetsOpenToggle="isMonthlyTargetsOpenToggle"
+          />
+          <MonthlyTargetsInfo
             v-if="isMonthlyTargetsOpen"
-          >
-            <div
-              v-for="target of targets.month"
-              :key="target.id"
-              class="costs__container__monthlyTargetsBox__item"
-            >
-              {{ $t("costs.group") }}:
-              {{ showTargetGroupName(+target.group_id) }} - {{ target.amount
-              }}{{ currency }}. {{ $t("costs.total") }} - {{ target.groupSum
-              }}{{ currency }}
-            </div>
-          </div>
+            :targets="targets"
+            :showTargetGroupName="showTargetGroupName"
+            :currency="currency"
+          />
           <Day
             v-for="item in costs"
             :key="item.period"
@@ -107,24 +82,28 @@ import FilteredCostsModal from "./Modals/FilteredCostsModal.vue";
 import TargetManagementModalVue from "./Targets/TargetManagementModal.vue";
 import FirstTimeCosts from "../../components/onboarding/FirstTimeCosts.vue";
 import DialogModal from "@/components/partials/DialogModal.vue";
+import CostsInfo from "./Components/CostsInfo.vue";
+import MonthlyTargetsInfo from '@/pages/Costs/Targets/MonthlyTargetsInfo';
 
 import {
   getActiveAccount,
   getFinData,
   showGroupName,
   addSumOfGroupsOnTargets,
+  getCostByID
 } from "../../utils";
 
 import {
-  addCostToAPI,
+  getData,
+  addCostService,
   deleteCostItemService,
   addGroupService,
-  addTargetToAPI,
-  deleteTargetFromAPI,
+  addTargetService,
+  deleteTargetService,
   editTargetFromAPI,
   filteredCostByGroupIdService,
   filteredCostByBudgetIdService,
-} from "./services";
+} from '../../services';
 
 export default {
   name: "costs-main",
@@ -164,6 +143,8 @@ export default {
     TargetManagementModalVue,
     FirstTimeCosts,
     DialogModal,
+    CostsInfo,
+    MonthlyTargetsInfo
   },
   methods: {
     closeDialogModal() {
@@ -184,15 +165,11 @@ export default {
     },
     async addTarget(target) {
       this.isLoadingToggle(true);
-      const token = localStorage.getItem("token");
-      const result = await addTargetToAPI(
-        target,
-        token,
-        (msg) => (this.msg = msg)
-      );
+      const result = await addTargetService(target, (msg) => (this.msg = msg))
+
       this.isLoadingToggle(false);
       if (result === 202) {
-        await this.getData();
+        await getData(this.period, this.setDataToComponent);
         this.$toast.info(this.$t("notifications.targetAdded"));
       } else {
         this.$toast.info(this.$t("notifications.somethingWentWrong"));
@@ -200,15 +177,10 @@ export default {
     },
     async deleteTarget(id) {
       this.isLoadingToggle(true);
-      const token = localStorage.getItem("token");
-      const result = await deleteTargetFromAPI(
-        id,
-        token,
-        (msg) => (this.msg = msg)
-      );
+      const result = await deleteTargetService(id, (msg) => (this.msg = msg))
       this.isLoadingToggle(false);
       if (result === 202) {
-        await this.getData();
+        await getData(this.period, this.setDataToComponent);
         this.$toast.info(this.$t("notifications.targetOnDelete"));
       } else {
         this.$toast.info(this.$t("notifications.somethingWentWrong"));
@@ -224,7 +196,7 @@ export default {
       );
       this.isLoadingToggle(false);
       if (result === 202) {
-        await this.getData();
+        await getData(this.period, this.setDataToComponent);
         this.$toast.info(this.$t("notifications.targetOnEdit"));
       } else {
         this.$toast.info(this.$t("notifications.somethingWentWrong"));
@@ -232,12 +204,11 @@ export default {
     },
     async addCost(cost) {
       this.isLoadingToggle(true);
-      const token = localStorage.getItem("token");
-      const result = await addCostToAPI(cost, token, (msg) => (this.msg = msg));
+      const result = await addCostService(cost, (msg) => (this.msg = msg));
       this.isLoadingToggle(false);
       if (result === 202) {
         this.addCostToggle();
-        await this.getData();
+        await getData(this.period, this.setDataToComponent);
         this.$toast.info(this.$t("notifications.costOnAdd"));
       } else {
         this.$toast.info(this.$t("notifications.somethingWentWrong"));
@@ -256,7 +227,7 @@ export default {
         }
       );
       this.isLoadingToggle(false);
-      if (result) await this.getData();
+      if (result) await getData(this.period, this.setDataToComponent);
       return result;
     },
     setCosts(data) {
@@ -275,7 +246,7 @@ export default {
     async deleteCost(costId) {
       this.dialogModalOpen = false;
       const token = localStorage.getItem("token");
-      const cost = this.getCostByID(costId);
+      const cost = getCostByID(costId, this.costs);
       const result = await deleteCostItemService(
         cost,
         token,
@@ -284,7 +255,7 @@ export default {
       );
 
       if (result) {
-        await this.onMounted();
+        await getData(this.period, this.setDataToComponent);
         this.$toast.info(this.$t("notifications.costOnDelete"));
       } else {
         this.$toast.info(this.$t("notifications.somethingWentWrong"));
@@ -292,14 +263,6 @@ export default {
     },
     isLoadingToggle(state) {
       this.isLoading = state;
-    },
-    getCostByID(id) {
-      let cost = [];
-      for (const days of this.costs) {
-        cost = days.items.filter((item) => +item.id === +id);
-        if (cost.length) return cost[0];
-      }
-      return cost;
     },
     filterCostsByGroup(groupId) {
       this.filteredCosts = filteredCostByGroupIdService(groupId, this.costs);
@@ -312,6 +275,8 @@ export default {
     },
     // TODO  move it to wrapper
     async onMounted() {
+      this.isLoadingToggle(true);
+      this.currency = localStorage.getItem("currency");
       // TODO optimize code
       this.costs = this.$store.getters["costs/costs"];
       this.groups = this.$store.getters["costs/costsGroup"];
@@ -319,17 +284,11 @@ export default {
       this.balance = this.$store.getters["user/balance"];
 
       if (!this.costs.length || !this.balance.length || !this.budgets.length) {
-        await this.getData();
+        await getData(this.period, this.setDataToComponent);
       }
+      this.isLoadingToggle(false);
     },
-    async getData() {
-      const token = localStorage.getItem("token");
-      const accountId = localStorage.getItem("accountId");
-      const { costs, budgets, accounts, targets } = await getFinData(
-        token,
-        this.period,
-        accountId
-      );
+    setDataToComponent(costs, budgets, accounts, targets) {
       const activeAccount = getActiveAccount(accounts);
       this.accLatter = activeAccount.title[0];
       this.groups = costs.groups;
@@ -362,12 +321,8 @@ export default {
 
       if (costs && budgets) {
         this.setDataToStore(costs, budgets, activeAccount.balance, targets);
-        this.costs = costs.costs;
-        this.groups = costs.groups;
-        this.budgets = budgets;
-        this.balance = activeAccount.balance;
+        this.setDataToComponent(costs, budgets, accounts, targets);
         this.period = newPeriod;
-        this.inThisMonth = costs.statistics.spentByMonth;
         this.$store.commit("user/setMonth", newPeriod);
       }
     },
@@ -383,10 +338,7 @@ export default {
   },
   async mounted() {
     this.checkOnboarding();
-    this.isLoadingToggle(true);
     await this.onMounted();
-    this.currency = localStorage.getItem("currency");
-    this.isLoadingToggle(false);
   },
 };
 </script>

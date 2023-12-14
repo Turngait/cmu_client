@@ -90,7 +90,7 @@ import PopChart from "./Components/PopChart.vue";
 import DonChart from "./Components/DonChart.vue";
 
 import { getFinData } from "./services";
-import { getActiveAccount, calculateGroupSum } from "../../utils/index";
+import { getActiveAccount, calculateGroupSum, formateDate } from "../../utils/index";
 
 export default {
   name: "dashboard-main",
@@ -209,6 +209,8 @@ export default {
         costsGarphData.days &&
         costsGarphData.days.length > 2
       ) {
+        costsGarphData.days = this.normalizeDateForGraph(costsGarphData.days);
+        incomesGarphData.days = this.normalizeDateForGraph(costsGarphData.days);
         const costsOptions = {
           color: "#00A6CB",
           label: this.$t("common.costs"),
@@ -243,6 +245,13 @@ export default {
         this.sourcesChartOptions = sourcesOptions;
       }
     },
+    normalizeDateForGraph(days) {
+      const normalizedDays = [];
+      for (const day of days) {
+        normalizedDays.push(formateDate(day));
+      }
+      return normalizedDays;
+    }
   },
   async mounted() {
     this.toggleOnboarding();

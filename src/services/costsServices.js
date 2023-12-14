@@ -1,5 +1,40 @@
-import { ENDPOINTS } from "../../config/api";
-import KEY from "../../config/key";
+import { ENDPOINTS } from "../config/api";
+import KEY from "../config/key";
+import { getFinData } from "../utils";
+
+export async function getData(period, setDataToComponent) {
+  const token = localStorage.getItem("token");
+  const accountId = localStorage.getItem("accountId");
+  const { costs, budgets, accounts, targets } = await getFinData(
+    token,
+    period,
+    accountId
+  );
+  setDataToComponent(costs, budgets, accounts, targets);
+}
+
+export async function addTargetService(target, setMsg) {
+  const token = localStorage.getItem("token");
+  return await addTargetToAPI(
+    target,
+    token,
+    setMsg
+  );
+}
+
+export async function deleteTargetService(id, setMsg) {
+  const token = localStorage.getItem("token");
+  return await deleteTargetFromAPI(
+    id,
+    token,
+    setMsg
+  );
+}
+
+export async function addCostService(cost, setMsg) {
+  const token = localStorage.getItem("token");
+  return await addCostToAPI(cost, token, setMsg);
+}
 
 export async function addCostToAPI(newCost, token, setErrors) {
   return await fetch(ENDPOINTS.costs.add, {

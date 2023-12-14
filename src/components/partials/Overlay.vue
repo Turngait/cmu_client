@@ -27,7 +27,7 @@ export default {
       this.$store.commit("user/setBalance", activeAccount.balance);
       this.$store.commit("incomes/setIncomes", data.incomes.incomes);
       this.$store.commit("incomes/setSources", data.incomes.sources);
-    },
+    }
   },
 };
 </script>

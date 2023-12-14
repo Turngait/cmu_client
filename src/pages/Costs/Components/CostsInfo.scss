@@ -1,0 +1,45 @@
+@import "/src/styles/main.scss";
+
+.costsInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  &__targetManagement {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+
+  &__openTManagementBtn {
+    background: none;
+    border: none;
+    text-decoration: underline;
+     font-size: 1.8rem;
+    cursor: pointer;
+    color: $black;
+  }
+  &__total {
+    font-size: 22px;
+    color: $black;
+    font-weight: 400;
+  }
+}
+
+@media all and (min-width: 0) and (max-width: 700px) {
+  .costsInfo {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-items: flex-start;
+    &__targetManagement {
+      align-items: flex-start;
+    }
+  }
+
+  .costsInfo__total {
+    font-size: 1.8rem;
+    margin-bottom: 0;
+  }
+}
