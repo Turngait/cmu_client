@@ -96,11 +96,11 @@ import {
 import {
   getData,
   addCostService,
-  deleteCostItemService,
+  deleteCostService,
   addGroupService,
   addTargetService,
   deleteTargetService,
-  editTargetFromAPI,
+  editTargetService,
   filteredCostByGroupIdService,
   filteredCostByBudgetIdService,
 } from '../../services';
@@ -188,10 +188,8 @@ export default {
     },
     async editTarget(target) {
       this.isLoadingToggle(true);
-      const token = localStorage.getItem("token");
-      const result = await editTargetFromAPI(
+      const result = await editTargetService(
         target,
-        token,
         (msg) => (this.msg = msg)
       );
       this.isLoadingToggle(false);
@@ -216,11 +214,8 @@ export default {
     },
     async addGroup(group) {
       this.isLoadingToggle(true);
-      const token = localStorage.getItem("token");
       const result = await addGroupService(
         group,
-        token,
-        this.setCosts,
         (msg) => {
           this.msg = msg;
           setTimeout(() => (this.msg = ""), 4000);
@@ -245,14 +240,8 @@ export default {
     },
     async deleteCost(costId) {
       this.dialogModalOpen = false;
-      const token = localStorage.getItem("token");
       const cost = getCostByID(costId, this.costs);
-      const result = await deleteCostItemService(
-        cost,
-        token,
-        this.setCosts,
-        this.setBalance
-      );
+      const result = await deleteCostService(cost);
 
       if (result) {
         await getData(this.period, this.setDataToComponent);

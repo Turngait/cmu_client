@@ -21,6 +21,14 @@ export async function addTargetService(target, setMsg) {
     setMsg
   );
 }
+export async function editTargetService(target, setMsg) {
+  const token = localStorage.getItem("token");
+  return await editTargetFromAPI(
+    target,
+    token,
+    setMsg
+  );
+}
 
 export async function deleteTargetService(id, setMsg) {
   const token = localStorage.getItem("token");
@@ -138,8 +146,16 @@ export function showGroupName(groups, itemId) {
   }
   return "None";
 }
+export async function deleteCostService(cost) {
+  const token = localStorage.getItem("token");
+  return await deleteCostFromAPI(
+    cost,
+    token,
+  );
 
-export async function deleteCostItemService(cost, token) {
+}
+
+export async function deleteCostFromAPI(cost, token) {
   // TODO Change on API URL
   return await fetch(ENDPOINTS.costs.delete, {
     method: "DELETE",
@@ -155,7 +171,17 @@ export async function deleteCostItemService(cost, token) {
   });
 }
 
-export async function addGroupService(costGroup, token, setError) {
+export async function addGroupService(group, setCosts, setMsg) {
+  const token = localStorage.getItem("token");
+  return await addGroupToAPI(
+    group,
+    token,
+    setCosts,
+    setMsg
+  );
+}
+
+export async function addGroupToAPI(costGroup, token, setError) {
   return await fetch(ENDPOINTS.costs.addGroup, {
     method: "POST",
     headers: {
@@ -167,8 +193,6 @@ export async function addGroupService(costGroup, token, setError) {
     body: JSON.stringify({ costGroup, token }),
   }).then(async (res) => {
     if (res.status === 202) {
-      const data = await res.json();
-      console.log(data);
       return true;
     } else if (res.status === 422) {
       const data = await res.json();
