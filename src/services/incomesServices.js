@@ -1,7 +1,17 @@
-import { ENDPOINTS } from "../../config/api";
-import KEYS from "../../config/key";
+import { ENDPOINTS } from "../config/api";
+import KEYS from "../config/key";
 
-export async function addIncomeService(income, token, setError) {
+
+export async function addIncomeService(income, setMsg) {
+  const token = localStorage.getItem("token");
+  return await addIncomeToAPI(
+    income,
+    token,
+    setMsg
+  );
+}
+
+export async function addIncomeToAPI(income, token, setError) {
   return await fetch(ENDPOINTS.incomes.add, {
     method: "POST",
     headers: {
@@ -30,7 +40,12 @@ export async function addIncomeService(income, token, setError) {
   });
 }
 
-export async function deleteIncomeService(income, token) {
+export async function deleteIncomeService(income) {
+  const token = localStorage.getItem("token");
+  return await deleteIncomeFromAPI(income, token);
+}
+
+export async function deleteIncomeFromAPI(income, token) {
   return await fetch(ENDPOINTS.incomes.delete, {
     method: "delete",
     headers: {
@@ -50,7 +65,12 @@ export async function deleteIncomeService(income, token) {
   });
 }
 
-export async function addSourceService(IncomeSource, token, setError) {
+export async function addSourceService(incomeSource, setError) {
+  const token = localStorage.getItem("token");
+  return await addSourceToAPI(incomeSource, token, setError);
+}
+
+export async function addSourceToAPI(IncomeSource, token, setError) {
   return await fetch(ENDPOINTS.incomes.addSource, {
     method: "POST",
     headers: {

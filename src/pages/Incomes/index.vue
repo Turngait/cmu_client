@@ -65,7 +65,7 @@ import {
   addSourceService,
   filteredIncomesByGroupIdService,
   filteredIncomesByBudgetIdService,
-} from "./services";
+} from "../../services";
 
 export default {
   name: "incomes-main",
@@ -104,10 +104,8 @@ export default {
     },
     async addIncome(income) {
       this.isLoadingToggle(true);
-      const token = localStorage.getItem("token");
       const result = await addIncomeService(
         income,
-        token,
         (msg) => (this.msg = msg)
       );
       this.isLoadingToggle(false);
@@ -119,12 +117,7 @@ export default {
         this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
-    setIncomes(data) {
-      this.incomes = data.incomes;
-      this.sources = data.sources;
-      this.$store.commit("incomes/setIncomes", data.incomes);
-      this.$store.commit("incomes/setSources", data.sources);
-    },
+    // TODO Change calculation methods on API
     setBalance(balance) {
       this.balance = balance;
       this.inThisMonth =
@@ -134,9 +127,8 @@ export default {
       this.$store.commit("user/setBalance", balance);
     },
     async deleteIncome(incomeId) {
-      const token = localStorage.getItem("token");
       const income = this.getIncomeByID(incomeId);
-      const status = await deleteIncomeService(income, token);
+      const status = await deleteIncomeService(income);
       if (status) {
         await this.getData();
         this.$toast.info(this.$t("notifications.incomeOnDelete"));
@@ -146,8 +138,7 @@ export default {
     },
     async addSource(source) {
       this.isLoadingToggle(true);
-      const token = localStorage.getItem("token");
-      const result = await addSourceService(source, token, (msg) => {
+      const result = await addSourceService(source, (msg) => {
         this.msg = msg;
         setTimeout(() => (this.msg = ""), 4000);
       });
@@ -163,10 +154,8 @@ export default {
       const data = await getFinData(token, newPeriod, accountId);
       this.isLoadingToggle(false);
       if (data) {
-        const activeAccount = getActiveAccount(data.accounts);
-        this.setFinDate(data, activeAccount);
-        this.incomes = data.incomes.incomes;
-        this.budgets = data.budgets.items;
+        const activeAccount = this.setDataToComponent(data.incomes, data.budgets, data.accounts);
+        this.setFinDateToStore(data, activeAccount);
         this.period = newPeriod;
         this.$store.commit("user/setMonth", newPeriod);
       }
@@ -174,8 +163,18 @@ export default {
     isLoadingToggle(state) {
       this.isLoading = state;
     },
+    setDataToComponent(incomes, budgets, accounts) {
+        const activeAccount = getActiveAccount(accounts);
+        this.accLatter = activeAccount.title[0];
+        this.incomes = incomes.incomes;
+        this.sources = incomes.sources;
+        this.budgets = budgets;
+        this.balance = activeAccount.balance;
+        this.setBalance(activeAccount.balance);
+        return activeAccount;
+    },
     // TODO Move to wrapper
-    setFinDate(data, activeAccount) {
+    setFinDateToStore(data, activeAccount) {
       this.$store.commit("costs/setCosts", data.costs.costs);
       this.$store.commit("costs/setGroups", data.costs.groups);
       this.$store.commit("user/setBudget", data.budgets);
@@ -202,14 +201,9 @@ export default {
       const accountId = localStorage.getItem("accountId");
       const data = await getFinData(token, this.period, accountId);
       if (data) {
-        const activeAccount = getActiveAccount(data.accounts);
-        this.accLatter = activeAccount.title[0];
-        this.incomes = data.incomes.incomes;
-        this.sources = data.incomes.sources;
-        this.budgets = data.budgets;
-        this.balance = activeAccount.balance;
-        this.setFinDate(data, activeAccount);
-        this.setBalance(activeAccount.balance);
+        const activeAccount = this.setDataToComponent(data.incomes, data.budgets, data.accounts);
+
+        this.setFinDateToStore(data, activeAccount);
       }
     },
     getIncomeByID(id) {

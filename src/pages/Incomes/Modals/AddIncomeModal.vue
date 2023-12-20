@@ -25,18 +25,18 @@
       <div v-if="v$.amount.$invalid">{{ $t("msg.amountReg") }}</div>
     </label>
     <div class="modal__addSourceBox">
-      <select class="selectCost" v-model="sourceId">
-        <option v-for="item in sources" :key="item.id" :value="item.id">
-          {{ item.title }}
-        </option>
-      </select>
+      <Select
+        :data="sources"
+        @selectChange="(data) => (sourceId = data)"
+        :selectedId="sourceId"
+      />
       <Button :onClick="toggleAddSourceOpen" title="+" />
     </div>
-    <select class="selectCost" v-model="budgetId">
-      <option v-for="item in budgets" :key="item.id" :value="item.id">
-        {{ item.title }}
-      </option>
-    </select>
+    <SelectBudgets
+      :data="budgets"
+      @selectChange="(data) => (budgetId = data)"
+      :selectedId="budgetId"
+    />
     <TxtArea
       :placeholder="$t('incomes.description') + '...'"
       @areaChange="(data) => (descr = data)"
@@ -59,6 +59,8 @@ import TextInput from "../../../components/controls/TextInput.vue";
 import TxtArea from "../../../components/controls/TxtArea.vue";
 import AddSourceModal from "./AddSourceModal.vue";
 import PopUp from "../../../components/partials/PopUp.vue";
+import SelectBudgets from "../../../components/controls/SelectBudgets.vue";
+import Select from "../../../components/controls/Select.vue";
 
 export default {
   name: "AddIncomeModal",
@@ -123,7 +125,15 @@ export default {
       this.isAddSourceOpen = !this.isAddSourceOpen;
     },
   },
-  components: { Button, TextInput, TxtArea, AddSourceModal, PopUp },
+  components: {
+    Button,
+    TextInput,
+    TxtArea,
+    AddSourceModal,
+    PopUp,
+    SelectBudgets,
+    Select
+  },
   props: [
     "onClose",
     "sources",
@@ -155,7 +165,7 @@ export default {
   }
 }
 
-.selectCost {
+.selectIncome {
   border: 1px solid $light-grey;
   border-radius: 5px;
   padding: 7px 20px;
