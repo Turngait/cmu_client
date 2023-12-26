@@ -1,7 +1,30 @@
-import { ENDPOINTS } from "../../config/api";
-import KEYS from "../../config/key";
+import { ENDPOINTS } from "../config/api";
+import KEYS from "../config/key";
+import { getFinData } from "../utils";
 
-export async function saveBudgetService(budget, token, setBudget, setErrors) {
+export async function getDataForBudgets(period, setDataToComponent) {
+  const token = localStorage.getItem("token");
+  const accountId = localStorage.getItem("accountId");
+  const { budgets, accounts, costs, incomes } = await getFinData(
+    token,
+    period,
+    accountId
+  );
+  
+  setDataToComponent(accounts, budgets, costs, incomes);
+}
+
+export async function addBudgetService(budget, setBudget, setErrors) {
+  const token = localStorage.getItem("token");
+  // TODO Add balance
+  return await addBudgetToAPI(
+    budget,
+    token,
+    setBudget,
+    setErrors
+  );
+}
+export async function addBudgetToAPI(budget, token, setBudget, setErrors) {
   const status = await fetch(ENDPOINTS.budgets.add, {
     mode: "cors",
     method: "POST",
@@ -33,8 +56,15 @@ export async function saveBudgetService(budget, token, setBudget, setErrors) {
 
   return status;
 }
-
-export async function deleteBudgetService(budgetId, token, setErrors) {
+export async function deleteBudgetService(budgetId, setErrors) {
+  const token = localStorage.getItem("token");
+  return await deleteBudgetOnAPI(
+    budgetId,
+    token,
+    setErrors
+  );
+}
+export async function deleteBudgetOnAPI(budgetId, token, setErrors) {
   return await fetch(ENDPOINTS.budgets.delete, {
     mode: "cors",
     method: "DELETE",
@@ -66,8 +96,15 @@ export async function deleteBudgetService(budgetId, token, setErrors) {
     }
   });
 }
-
-export async function editBudgetService(budget, token, setErrors) {
+export async function editBudgetService(budget, setErrors) {
+  const token = localStorage.getItem("token");
+  return await editBudgetOnAPI(
+    budget,
+    token,
+    setErrors
+  );
+}
+export async function editBudgetOnAPI(budget, token, setErrors) {
   return await fetch(ENDPOINTS.budgets.edit, {
     mode: "cors",
     method: "Put",

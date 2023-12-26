@@ -1,65 +1,68 @@
 <template>
-  <Preloader v-if="isLoading" />
-  <div v-else class="budgets">
-    <FirstTimeBudgets v-if="onBoarding.firstTime" :onClose="closeFirstTime" />
-    <DialogModal v-if="dialogModalOpen" :text="dialogModalText" :onClose="closeDialogModal" :onSubmit="dialogModalOnSubmit"/>
-    <BudgetHistoryModal
-      :items="historyItems"
-      v-if="isHistoryOpen"
-      :onClose="openHistoryToggle"
-      :currency="currency"
-      :balance="balance"
-    />
-    <AddBudgetModal
-      v-if="isAddBudgetOpen"
-      :onClose="addBudgetToggle"
-      :addBudget="addBudget"
-      :msg="msg"
-    />
-    <EditBudgetModal
-      v-if="editingBudget"
-      :budget="editingBudget"
-      :onClose="closeEditBudget"
-      :editBudget="editBudget"
-    />
-    <TransferBetweenBudgetsModal 
-      v-if="isTransferModalOpen"
-      :budgets="budgets"
-      :onClose="toggleOpenTransferModal"
-      :onTransfer="startTransferHandler"
-    />
-    <TopMenu
-      :logOut="logOut"
-      :pageName="$t('common.budgets')"
-      :balance="balance"
-      :period="period"
-      :changePeriod="changePeriod"
-      :accLatter="accLatter"
-    />
-    <div class="budgets__container">
-      <p class="budgets__msg">{{ msg }}</p>
-      <BudgetsManagement
-        :onClickTransfer="toggleOpenTransferModal"
-        :isTransferPossible="isTransferPossible"
+  <Overlay v-slot="slotProps">
+    <Preloader v-if="isLoading" />
+    <div v-else class="budgets">
+      <FirstTimeBudgets v-if="onBoarding.firstTime" :onClose="closeFirstTime" />
+      <DialogModal v-if="dialogModalOpen" :text="dialogModalText" :onClose="closeDialogModal" :onSubmit="dialogModalOnSubmit"/>
+      <BudgetHistoryModal
+        :items="historyItems"
+        v-if="isHistoryOpen"
+        :onClose="openHistoryToggle"
+        :currency="currency"
+        :balance="balance"
       />
-      <div class="budgets__box">
-        <Budget
-          v-for="item of budgets"
-          :key="item.id"
-          :item="item"
-          :deleteBudget="onDeleteBudget"
-          :editBudget="editBudgetOpen"
-          :isLast="budgets.length <= 1"
-          :currency="currency"
-          :openHistory="openHistoryToggle"
+      <AddBudgetModal
+        v-if="isAddBudgetOpen"
+        :onClose="addBudgetToggle"
+        :addBudget="addBudget"
+        :msg="msg"
+      />
+      <EditBudgetModal
+        v-if="editingBudget"
+        :budget="editingBudget"
+        :onClose="closeEditBudget"
+        :editBudget="editBudget"
+      />
+      <TransferBetweenBudgetsModal 
+        v-if="isTransferModalOpen"
+        :budgets="budgets"
+        :onClose="toggleOpenTransferModal"
+        :onTransfer="startTransferHandler"
+      />
+      <TopMenu
+        :logOut="slotProps.logOut"
+        :pageName="$t('common.budgets')"
+        :balance="balance"
+        :period="period"
+        :changePeriod="changePeriod"
+        :accLatter="accLatter"
+      />
+      <div class="budgets__container">
+        <p class="budgets__msg">{{ msg }}</p>
+        <BudgetsManagement
+          :onClickTransfer="toggleOpenTransferModal"
+          :isTransferPossible="isTransferPossible"
         />
+        <div class="budgets__box">
+          <Budget
+            v-for="item of budgets"
+            :key="item.id"
+            :item="item"
+            :deleteBudget="onDeleteBudget"
+            :editBudget="editBudgetOpen"
+            :isLast="budgets.length <= 1"
+            :currency="currency"
+            :openHistory="openHistoryToggle"
+          />
+        </div>
       </div>
+      <AddBigBtn :onClick="addBudgetToggle" />
     </div>
-    <AddBigBtn :onClick="addBudgetToggle" />
-  </div>
+  </Overlay>
 </template>
 
 <script>
+import Overlay from "../../components/partials/Overlay.vue";
 import TopMenu from "../../components/partials/TopMenu.vue";
 import Budget from "./Components/BudgetItem.vue";
 import AddBudgetModal from "./Modals/AddBudgetModal.vue";
@@ -70,6 +73,8 @@ import FirstTimeBudgets from "../../components/onboarding/FirstTimeBudgets.vue";
 import DialogModal from "@/components/partials/DialogModal.vue";
 import BudgetsManagement from "./Components/BudgetsManagement.vue";
 import TransferBetweenBudgetsModal from "./Modals/TransferBetweenBudgetsModal.vue";
+import Preloader from "../../components/partials/Preloader.vue";
+
 
 import {
   getActiveAccount,
@@ -78,11 +83,12 @@ import {
 } from "../../utils";
 
 import {
-  saveBudgetService,
+  addBudgetService,
   deleteBudgetService,
   editBudgetService,
   transferMoneyBetweenBudgetsService,
-} from "./services";
+  getDataForBudgets,
+} from '../../services';
 
 export default {
   name: "budgets-main",
@@ -121,10 +127,12 @@ export default {
     AddBudgetModal,
     EditBudgetModal,
     BudgetHistoryModal,
+    Preloader,
     FirstTimeBudgets,
     DialogModal,
     BudgetsManagement,
-    TransferBetweenBudgetsModal
+    TransferBetweenBudgetsModal,
+    Overlay
   },
   methods: {
     toggleOpenTransferModal() {
@@ -136,14 +144,6 @@ export default {
       this.toggleOpenTransferModal();
 
       if(result) await this.onMount();
-    },
-    logOut() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("accountId");
-      this.$store.commit("user/resetState");
-      this.$store.commit("costs/resetState");
-      this.$store.commit("incomes/resetState");
-      this.$router.push("/");
     },
     openHistoryToggle(budget_id) {
       this.isHistoryOpen = !this.isHistoryOpen;
@@ -169,11 +169,8 @@ export default {
     async addBudget(budget) {
       this.isLoading = true;
 
-      const token = localStorage.getItem("token");
-      // TODO Add balance
-      const result = await saveBudgetService(
+      const result = await addBudgetService(
         budget,
-        token,
         (data) => {
           this.budgets.push(data);
         },
@@ -198,10 +195,8 @@ export default {
       this.isLoading = true;
 
       this.dialogModalOpen = false;
-      const token = localStorage.getItem("token");
       const isDeleted = await deleteBudgetService(
         id,
-        token,
         (msg) => (this.msg = msg)
       );
       this.isLoading = false;
@@ -219,10 +214,8 @@ export default {
     },
     async editBudget(budget) {
       this.isLoading = true;
-      const token = localStorage.getItem("token");
       const result = await editBudgetService(
         budget,
-        token,
         (msg) => (this.msg = msg)
       );
       this.isLoading = false;
@@ -249,7 +242,20 @@ export default {
         this.$store.commit("user/setMonth", newPeriod);
       }
     },
+    // TODO Move to wrapper
+    setDataToComponent(accounts, budgets, costs, incomes) {
+      const activeAccount = getActiveAccount(accounts);
 
+      this.accLatter = activeAccount.title[0];
+      this.currency = activeAccount.currency;
+      localStorage.setItem("currency", activeAccount.currency);
+      this.isTransferPossible = budgets.length > 1;
+      this.budgets = budgets;
+      this.balance = activeAccount.balance;
+      this.costs = costs.costs;
+      this.incomes = incomes.incomes;
+      return activeAccount;
+    },
     // TODO Move to wrapper
     setFinDate(data) {
       const activeAccount = getActiveAccount(data.accounts);
@@ -271,27 +277,9 @@ export default {
     },
     async onMount() {
       this.isLoading = true;
-
-      const token = localStorage.getItem("token");
-      const accountId = localStorage.getItem("accountId");
-
       const month = this.$store.getters["user/month"];
-      const { budgets, accounts, costs, incomes } = await getFinData(
-        token,
-        month,
-        accountId
-      );
+      await getDataForBudgets(month, this.setDataToComponent);
       this.isLoading = false;
-
-      const activeAccount = getActiveAccount(accounts);
-      this.accLatter = activeAccount.title[0];
-      this.currency = activeAccount.currency;
-      localStorage.setItem("currency", activeAccount.currency);
-      this.isTransferPossible = budgets.length > 1;
-      this.budgets = budgets;
-      this.balance = activeAccount.balance;
-      this.costs = costs.costs;
-      this.incomes = incomes.incomes;
     },
     checkOnboarding() {
       if (!localStorage.getItem("onBFirstTimeBudgets")) {
