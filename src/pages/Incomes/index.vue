@@ -117,13 +117,8 @@ export default {
         this.$toast.info(this.$t("notifications.somethingWentWrong"));
       }
     },
-    // TODO Change calculation methods on API
     setBalance(balance) {
       this.balance = balance;
-      this.inThisMonth =
-        this.incomes.length > 0
-          ? this.incomes[this.incomes.length - 1].gainByPeriod
-          : 0;
       this.$store.commit("user/setBalance", balance);
     },
     async deleteIncome(incomeId) {
@@ -164,14 +159,15 @@ export default {
       this.isLoading = state;
     },
     setDataToComponent(incomes, budgets, accounts) {
-        const activeAccount = getActiveAccount(accounts);
-        this.accLatter = activeAccount.title[0];
-        this.incomes = incomes.incomes;
-        this.sources = incomes.sources;
-        this.budgets = budgets;
-        this.balance = activeAccount.balance;
-        this.setBalance(activeAccount.balance);
-        return activeAccount;
+      const activeAccount = getActiveAccount(accounts);
+      this.accLatter = activeAccount.title[0];
+      this.incomes = incomes.incomes;
+      this.sources = incomes.sources;
+      this.inThisMonth = incomes?.statistics?.gainByMonth || 0;
+      this.budgets = budgets;
+      this.balance = activeAccount.balance;
+      this.setBalance(activeAccount.balance);
+      return activeAccount;
     },
     // TODO Move to wrapper
     setFinDateToStore(data, activeAccount) {
@@ -191,10 +187,6 @@ export default {
       if (!this.incomes.length || !this.budgets.length) {
         await this.getData();
       }
-      this.inThisMonth =
-        this.incomes.length > 0
-          ? this.incomes[this.incomes.length - 1].gainByPeriod
-          : 0;
     },
     async getData() {
       const token = localStorage.getItem("token");

@@ -148,10 +148,8 @@ export default {
       this.balance = activeAccount.balance;
       this.costsGarphData = data.costs.graphData;
       this.incomesGarphData = data.incomes.incomeGraphData;
-      this.spendInMonth =
-        data.costs.costs[data.costs.costs.length - 1]?.spentByThisMonth | 0;
-      this.gainByPeriod =
-        data.incomes.incomes[data.incomes.incomes.length - 1]?.gainByPeriod | 0;
+      this.spendInMonth = data.costs.statistics?.spentByMonth || 0;
+      this.gainByPeriod = data.incomes.statistics?.gainByMonth || 0;
 
       return {
         costsGarphData: data.costs.graphData,
