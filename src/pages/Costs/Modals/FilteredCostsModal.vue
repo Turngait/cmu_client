@@ -1,7 +1,32 @@
+<script setup>
+  import { ref, onMounted, defineProps } from 'vue';
+
+  import PopUp from "../../../components/partials/PopUp.vue";
+
+  import { numberFormat, formateDate } from "../../../utils";
+
+  const props = defineProps(["onClose", "filteredCosts"]);
+
+  const currency = ref(localStorage.getItem("currency"));
+  const total = ref(0);
+
+  function formatNumber(amount) {
+    return numberFormat(amount);
+  }
+
+  function dateFormat(date) {
+    return formateDate(date);
+  }
+
+  onMounted(() => {
+    total.value = props.filteredCosts.reduce((acc, item) => acc + item.amount, 0);
+  });
+</script>
+
 <template>
   <PopUp
     :header="$t('costs.filteredCostTitle')"
-    :onClose="onClose"
+    :onClose="props.onClose"
   >
     <div class="modal__headerBox__total">
       {{ `${$t("costs.total")}: ${total} ${currency}` }}
@@ -9,7 +34,7 @@
     <div class="filteredCostsContainer">
       <div
         class="filteredCostsBox"
-        v-for="cost of filteredCosts"
+        v-for="cost of props.filteredCosts"
         :key="cost.id"
       >
         <div class="filteredCostsBox__mainInfoBox">
@@ -25,35 +50,6 @@
     </div>
   </PopUp>
 </template>
-
-<script>
-import PopUp from "../../../components/partials/PopUp.vue";
-
-import { numberFormat, formateDate } from "../../../utils";
-
-export default {
-  name: "FilteredCostsModal",
-  components: { PopUp },
-  props: ["onClose", "filteredCosts"],
-  data() {
-    return {
-      currency: localStorage.getItem("currency"),
-      total: 0,
-    };
-  },
-  methods: {
-    formatNumber(amount) {
-      return numberFormat(amount);
-    },
-    dateFormat(date) {
-      return formateDate(date);
-    },
-  },
-  mounted() {
-    this.total = this.filteredCosts.reduce((acc, item) => acc + item.amount, 0);
-  },
-};
-</script>
 
 <style lang="scss">
 @import "/src/styles/main.scss";

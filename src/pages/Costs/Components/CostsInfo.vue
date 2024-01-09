@@ -1,22 +1,34 @@
+<script setup>
+  import { defineProps } from 'vue';
+  const props = defineProps([
+    "inThisMonth",
+    "currency",
+    "targetManagementToggle",
+    "showMonthTargets",
+    "isMonthlyTargetsOpen",
+    "isMonthlyTargetsOpenToggle",
+  ]);
+</script>
+
 <template>
   <div class="costsInfo">
     <h3 class="costsInfo__total">
-      {{ $t("common.inThisMonth") }}: {{ inThisMonth }} {{ currency }}
+      {{ $t("common.inThisMonth") }}: {{ props.inThisMonth }} {{ props.currency }}
     </h3>
     <div class="costsInfo__targetManagement">
       <button
-        @click="targetManagementToggle"
+        @click="props.targetManagementToggle"
         class="costsInfo__openTManagementBtn"
       >
         {{ $t("costs.targetsManagement") }}
       </button>
       <button
-        v-if="showMonthTargets"
-        @click="isMonthlyTargetsOpenToggle"
+        v-if="props.showMonthTargets"
+        @click="props.isMonthlyTargetsOpenToggle"
         class="costsInfo__openTManagementBtn"
       >
         {{
-          !isMonthlyTargetsOpen
+          !props.isMonthlyTargetsOpen
             ? $t("costs.showMonthlyTarget")
             : $t("costs.hideMonthlyTarget")
         }}
@@ -24,24 +36,6 @@
     </div>
   </div>
 </template>
-
-<script>
-
-
-export default {
-  name: "head-info",
-  components: {
-  },
-  props: [
-    "inThisMonth",
-    "currency",
-    "targetManagementToggle",
-    "showMonthTargets",
-    "isMonthlyTargetsOpen",
-    "isMonthlyTargetsOpenToggle",
-  ],
-};
-</script>
 
 <style scoped lang="scss">
 @import "./CostsInfo.scss";

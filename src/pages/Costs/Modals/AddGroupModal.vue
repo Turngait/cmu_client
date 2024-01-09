@@ -1,5 +1,39 @@
+<script setup>
+  import { ref, defineProps, computed } from 'vue';
+  import 'vue-toast-notification/dist/theme-bootstrap.css';
+
+  import { useVuelidate } from "@vuelidate/core";
+  import { required } from "@vuelidate/validators";
+
+  import PopUp from "../../../components/partials/PopUp.vue";
+  import Button from "../../../components/controls/Button.vue";
+  import TextInput from "../../../components/controls/TextInput.vue";
+
+  const props = defineProps(["onClose", "addGroup", "msg"]);
+
+  const title = ref('');
+  const descr = ref('');
+
+  const rules = computed(() => ({ 
+      title: { required },
+    }));
+  const v$ = useVuelidate(rules, { title });
+
+  async function saveGroup() {
+      const account_id = localStorage.getItem("accountId");
+
+      const group = {
+        title: title.value,
+        description: descr.value,
+        order: 0,
+        account_id,
+      };
+      await props.addGroup(group);
+    }
+</script>
+
 <template>
-  <PopUp :header="$t('costs.addGroup')" :onClose="onClose">
+  <PopUp :header="$t('costs.addGroup')" :onClose="props.onClose">
     <label>
       <TextInput
         :placeholder="$t('costs.title') + '...'"
@@ -7,7 +41,7 @@
       />
       <div v-if="v$.title.$invalid">{{ $t("msg.titleReg") }}</div>
     </label>
-    <p class="modal_msg">{{ msg }}</p>
+    <p class="modal_msg">{{ props.msg }}</p>
     <Button
       :isActive="!v$.title.$invalid"
       :onClick="saveGroup"
@@ -15,48 +49,6 @@
     />
   </PopUp>
 </template>
-
-<script>
-import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-
-import PopUp from "../../../components/partials/PopUp.vue";
-import Button from "../../../components/controls/Button.vue";
-import TextInput from "../../../components/controls/TextInput.vue";
-
-export default {
-  name: "AddCostModal",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      title: "",
-      descr: "",
-    };
-  },
-  validations() {
-    return {
-      title: { required },
-    };
-  },
-  components: { Button, TextInput, PopUp },
-  props: ["onClose", "addGroup", "msg"],
-  methods: {
-    async saveGroup() {
-      const account_id = localStorage.getItem("accountId");
-
-      const group = {
-        title: this.title,
-        description: this.descr,
-        order: 0,
-        account_id,
-      };
-      await this.addGroup(group);
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";
