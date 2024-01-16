@@ -1,32 +1,27 @@
+<script setup>
+  import { defineProps} from 'vue';
+  const props = defineProps([
+    "targets",
+    "showTargetGroupName",
+    "currency",
+  ]);
+
+</script>
+
 <template>
   <div class="monthlyTargetsBox">
     <div
-       v-for="target of targets.month"
+       v-for="target of props.targets.month"
       :key="target.id"
       class="monthlyTargetsBox__item"
     >
        {{ $t("costs.group") }}:
-      {{ showTargetGroupName(+target.group_id) }} - {{ target.amount
-      }}{{ currency }}. {{ $t("costs.total") }} - {{ target.groupSum
-      }}{{ currency }}
+      {{ props.showTargetGroupName(+target.group_id) }} - {{ target.amount
+      }}{{ props.currency }}. {{ $t("costs.total") }} - {{ target.groupSum
+      }}{{ props.currency }}
     </div>
   </div>
 </template>
-
-<script>
-
-
-export default {
-  name: "monthly-targets-info",
-  components: {
-  },
-  props: [
-    "targets",
-    "showTargetGroupName",
-    "currency",
-  ],
-};
-</script>
 
 <style scoped lang="scss">
 @import "/src/styles/main.scss";

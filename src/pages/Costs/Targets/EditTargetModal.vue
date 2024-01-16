@@ -1,5 +1,39 @@
+<script setup>
+  import { ref, defineProps, computed } from 'vue';
+
+  import { useVuelidate } from "@vuelidate/core";
+  import { required, minValue } from "@vuelidate/validators";
+  import Button from "../../../components/controls/Button.vue";
+  import TextInput from "../../../components/controls/TextInput.vue";
+  import PopUp from "../../../components/partials/PopUp.vue";
+
+  const props = defineProps(["onClose", "editTarget", "msg", "target"]);
+  const amount = ref(props.target.amount);
+
+  const rules = computed(() => ({ 
+      amount: {
+        minValueValue: minValue(0), 
+        required
+      },
+    }));
+  const v$ = useVuelidate(rules, { amount });
+
+  async function saveTarget() {
+    const editableTarget = {
+      id: props.target.id,
+      type: props.target.type,
+      amount: +amount.value,
+      group_id: +props.target.group_id,
+      account_id: +props.target.account_id,
+    };
+
+     await props.editTarget(editableTarget);
+  }
+
+</script>
+
 <template>
-  <PopUp :header="$t('costs.editTarget')" :onClose="onClose">
+  <PopUp :header="$t('costs.editTarget')" :onClose="props.onClose">
     <label>
       <TextInput
         :placeholder="$t('costs.amount') + '...'"
@@ -9,7 +43,7 @@
       />
       <div v-if="v$.amount.$invalid">{{ $t("msg.amountReg") }}</div>
     </label>
-    <p class="modal_msg">{{ msg }}</p>
+    <p class="modal_msg">{{ props.msg }}</p>
     <Button
       :isActive="!v$.amount.$invalid"
       :onClick="saveTarget"
@@ -17,46 +51,6 @@
     />
   </PopUp>
 </template>
-
-<script>
-import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-import Button from "../../../components/controls/Button.vue";
-import TextInput from "../../../components/controls/TextInput.vue";
-import PopUp from "../../../components/partials/PopUp.vue";
-
-export default {
-  name: "EditTargetModal",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      amount: this.target.amount,
-    };
-  },
-  validations() {
-    return {
-      amount: { required },
-    };
-  },
-  components: { Button, TextInput, PopUp },
-  props: ["onClose", "editTarget", "msg", "target"],
-  methods: {
-    async saveTarget() {
-      const editableTarget = {
-        id: this.target.id,
-        type: this.target.type,
-        amount: +this.amount,
-        group_id: +this.target.group_id,
-        account_id: +this.target.account_id,
-      };
-
-      await this.editTarget(editableTarget);
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";

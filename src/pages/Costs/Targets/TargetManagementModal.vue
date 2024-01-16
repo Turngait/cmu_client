@@ -1,14 +1,49 @@
+<script setup>
+  import { ref, defineProps } from 'vue';
+
+  import CloseBtnIcon from "../../../components/icons/CloseBtn.vue";
+  import Button from "../../../components/controls/Button.vue";
+
+  import AddTargetModal from "./AddTargetModal.vue";
+  import EditTargetModal from "./EditTargetModal.vue";
+  import TargetItem from "./TargetItem.vue";
+
+  const props = defineProps([
+      "onClose",
+      "groups",
+      "addTarget",
+      "msg",
+      "targets",
+      "deleteTarget",
+      "editTarget",
+    ]);
+  const isAddTargetOpen = ref(false);
+  const currency = ref(localStorage.getItem("currency"));
+  const editableTarget = ref(null);
+
+  function addTargetToggle() {
+    isAddTargetOpen.value = !isAddTargetOpen.value;
+  }
+  function closeEditModal() {
+    editableTarget.value = null;
+  }
+  function editTargetOpen(target) {
+    editableTarget.value = target;
+  }
+
+</script>
+
 <template>
   <AddTargetModal
     v-if="isAddTargetOpen && !editableTarget"
-    :groups="groups"
+    :groups="props.groups"
     :onClose="addTargetToggle"
-    :addTarget="addTarget"
+    :addTarget="props.addTarget"
   />
   <EditTargetModal
     v-else-if="editableTarget && !isAddTargetOpen"
     :onClose="closeEditModal"
-    :editTarget="editTarget"
+    :editTarget="props.editTarget"
     :target="editableTarget"
   />
   <div class="overlay" v-else>
@@ -17,89 +52,35 @@
         <h3 class="modal__headerBox__title">
           {{ $t("costs.targetsManagement") }}
         </h3>
-        <CloseBtnIcon :onClick="onClose" />
+        <CloseBtnIcon :onClick="props.onClose" />
       </div>
       <div class="targets">
         <TargetItem
-          v-for="target of targets.day"
+          v-for="target of props.targets.day"
           :key="target.id"
           :target="target"
-          :deleteTarget="deleteTarget"
+          :deleteTarget="props.deleteTarget"
           :editTarget="editTargetOpen"
           :currency="currency"
         />
       </div>
       <div class="targets">
         <TargetItem
-          v-for="target of targets.month"
+          v-for="target of props.targets.month"
           :key="target.id"
           :target="target"
-          :deleteTarget="deleteTarget"
+          :deleteTarget="props.deleteTarget"
           :editTarget="editTargetOpen"
           :currency="currency"
         />
       </div>
-      <p class="modal_msg">{{ msg }}</p>
+      <p class="modal_msg">{{ props.msg }}</p>
       <div class="modal__btnBox">
         <Button :onClick="addTargetToggle" :title="$t('costs.addTarget')" />
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import { required } from "@vuelidate/validators";
-import CloseBtnIcon from "../../../components/icons/CloseBtn.vue";
-import Button from "../../../components/controls/Button.vue";
-
-import AddTargetModal from "./AddTargetModal.vue";
-import EditTargetModal from "./EditTargetModal.vue";
-import TargetItem from "./TargetItem.vue";
-
-export default {
-  name: "TargetManagementModal",
-  data() {
-    return {
-      isAddTargetOpen: false,
-      currency: localStorage.getItem("currency"),
-      editableTarget: null,
-    };
-  },
-  validations() {
-    return {
-      title: { required },
-      amount: { required },
-    };
-  },
-  components: {
-    Button,
-    CloseBtnIcon,
-    AddTargetModal,
-    TargetItem,
-    EditTargetModal,
-  },
-  props: [
-    "onClose",
-    "groups",
-    "addTarget",
-    "msg",
-    "targets",
-    "deleteTarget",
-    "editTarget",
-  ],
-  methods: {
-    addTargetToggle() {
-      this.isAddTargetOpen = !this.isAddTargetOpen;
-    },
-    closeEditModal() {
-      this.editableTarget = null;
-    },
-    editTargetOpen(target) {
-      this.editableTarget = target;
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";

@@ -1,5 +1,41 @@
+<script setup>
+  import { ref, defineProps, computed } from 'vue';
+
+  import { useVuelidate } from "@vuelidate/core";
+  import { required, minValue } from "@vuelidate/validators";
+  import Button from "../../../components/controls/Button.vue";
+  import TextInput from "../../../components/controls/TextInput.vue";
+  import PopUp from "../../../components/partials/PopUp.vue";
+
+  const props = defineProps(["onClose", "groups", "addTarget", "msg"]);
+  const type = ref("day");
+  const amount = ref("");
+  const groupId = ref(Array.isArray(props.groups) && props.groups.length > 0
+          ? props.groups[0].id
+          : "");
+  const rules = computed(() => ({ 
+      amount: {
+        minValueValue: minValue(0), 
+        required
+      },
+    }));
+  const v$ = useVuelidate(rules, { amount });
+
+  async function saveTarget() {
+    const accountId = localStorage.getItem("accountId");
+    const target = {
+      type: type.value,
+      amount: +amount.value,
+      group_id: groupId.value,
+      account_id: accountId,
+    };
+
+    await props.addTarget(target);
+  }
+</script>
+
 <template>
-  <PopUp class="overlay" :header="$t('costs.addTarget')" :onClose="onClose">
+  <PopUp class="overlay" :header="$t('costs.addTarget')" :onClose="props.onClose">
     <select class="selectCost" v-model="type">
       <option value="day" selected>
         {{ $t("costs.targetTypeDay") }}
@@ -17,11 +53,11 @@
       <div v-if="v$.amount.$invalid">{{ $t("msg.amountReg") }}</div>
     </label>
     <select class="selectCost" v-model="groupId" v-if="type !== 'day'">
-      <option v-for="group in groups" :key="group.id" :value="group.id">
+      <option v-for="group in props.groups" :key="group.id" :value="group.id">
         {{ group.title }}
       </option>
     </select>
-    <p class="modal_msg">{{ msg }}</p>
+    <p class="modal_msg">{{ props.msg }}</p>
     <Button
       :isActive="!v$.amount.$invalid"
       :onClick="saveTarget"
@@ -29,51 +65,6 @@
     />
   </PopUp>
 </template>
-
-<script>
-import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-import Button from "../../../components/controls/Button.vue";
-import TextInput from "../../../components/controls/TextInput.vue";
-import PopUp from "../../../components/partials/PopUp.vue";
-
-export default {
-  name: "AddTargetModal",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      type: "day",
-      amount: "",
-      groupId:
-        Array.isArray(this.groups) && this.groups.length > 0
-          ? this.groups[0].id
-          : "",
-    };
-  },
-  validations() {
-    return {
-      amount: { required },
-    };
-  },
-  components: { Button, TextInput, PopUp },
-  props: ["onClose", "groups", "addTarget", "msg"],
-  methods: {
-    async saveTarget() {
-      const accountId = localStorage.getItem("accountId");
-      const target = {
-        type: this.type,
-        amount: +this.amount,
-        group_id: this.groupId,
-        account_id: accountId,
-      };
-
-      await this.addTarget(target);
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";
