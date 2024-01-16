@@ -1,3 +1,74 @@
+<script setup>
+  import { ref, defineProps, computed } from 'vue';
+  import {useToast} from 'vue-toast-notification';
+  import 'vue-toast-notification/dist/theme-bootstrap.css';
+  import { useVuelidate } from "@vuelidate/core";
+  import { required, minValue, helpers } from "@vuelidate/validators";
+
+  import PopUp from "../../../components/partials/PopUp.vue";
+  import Button from "../../../components/controls/Button.vue";
+  import TextInput from "../../../components/controls/TextInput.vue";
+  import TxtArea from "../../../components/controls/TxtArea.vue";
+  import AddGroupModal from "./AddGroupModal.vue";
+  import Select from "../../../components/controls/Select.vue";
+  import SelectBudgets from "../../../components/controls/SelectBudgets.vue";
+
+  const props = defineProps(["onClose", "groups", "budgets", "addCost", "addGroup", "msg"]);
+  const $toast = useToast({ position: "top" });
+
+  const date = ref(new Date().toISOString().slice(0, 10));
+
+  const title = ref('');
+  const amount = ref('');
+  const descr = ref('');
+  const isAddGroupOpen = ref(false);
+
+  const groupId = ref(Array.isArray(props.groups) && props.groups.length > 0 ? props.groups[0].id : '');
+  const budgetId = ref(Array.isArray(props.budgets) && props.budgets.length > 0 ? props.budgets[0].id : '');
+
+  const mustBeCurrency = helpers.regex(/^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/);
+
+  const rules = computed(() => ({ 
+      title: { required },
+      amount: {
+        minValueValue: minValue(0), 
+        required,
+        mustBeCurrency
+      },
+    }));
+  const v$ = useVuelidate(rules, { title, amount });
+
+  async function saveCost() {
+    const accountId = localStorage.getItem("accountId");
+    const cost = {
+      title: title.value,
+      date: date.value,
+      amount: amount.value,
+      group_id: groupId.value,
+      budget_id: budgetId.value,
+      description: descr.value,
+      account_id: accountId,
+      month: new Date(date.value).getMonth() + 1,
+      year: new Date(date.value).getFullYear(),
+    };
+
+    await props.addCost(cost);
+  }
+  function toggleAddGroupOpen() {
+    isAddGroupOpen.value = !isAddGroupOpen.value;
+  }
+  async function addGroupHandler(group) {
+    const result = await props.addGroup(group);
+    if (result) {
+      toggleAddGroupOpen();
+      $toast.info("Group is added");
+    } else {
+      $toast.info("Something is went wrong");
+    }
+  }
+
+</script>
+
 <template>
   <AddGroupModal
     v-if="isAddGroupOpen"
@@ -5,7 +76,7 @@
     :addGroup="addGroupHandler"
     :msg="msg"
   />
-  <PopUp :header="$t('costs.add')" :onClose="onClose" v-else>
+  <PopUp :header="$t('costs.add')" :onClose="props.onClose" v-else>
     <TextInput typeInput="date" @inputChange="(data) => (date = data)" />
     <label>
       <TextInput
@@ -50,95 +121,6 @@
     />
   </PopUp>
 </template>
-
-<script>
-import { useVuelidate } from "@vuelidate/core";
-import { required, minValue, helpers } from "@vuelidate/validators";
-
-import PopUp from "../../../components/partials/PopUp.vue";
-import Button from "../../../components/controls/Button.vue";
-import TextInput from "../../../components/controls/TextInput.vue";
-import TxtArea from "../../../components/controls/TxtArea.vue";
-import AddGroupModal from "./AddGroupModal.vue";
-import Select from "../../../components/controls/Select.vue";
-import SelectBudgets from "../../../components/controls/SelectBudgets.vue";
-
-export default {
-  name: "AddCostModal",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      date: new Date().toISOString().slice(0, 10),
-      title: "",
-      amount: "",
-      groupId:
-        Array.isArray(this.groups) && this.groups.length > 0
-          ? this.groups[0].id
-          : "",
-      budgetId:
-        Array.isArray(this.budgets) && this.budgets.length > 0
-          ? this.budgets[0].id
-          : "",
-      descr: "",
-      isAddGroupOpen: false,
-    };
-  },
-  validations() {
-    const mustBeCurrency = helpers.regex(/^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/);
-
-    return {
-      title: { required },
-      amount: {
-        minValueValue: minValue(0), 
-        required,
-        mustBeCurrency
-      },
-    };
-  },
-  components: {
-    Button,
-    TextInput,
-    TxtArea,
-    AddGroupModal,
-    PopUp,
-    Select,
-    SelectBudgets,
-  },
-  props: ["onClose", "groups", "budgets", "addCost", "addGroup", "msg"],
-  methods: {
-    async saveCost() {
-      const accountId = localStorage.getItem("accountId");
-      const cost = {
-        title: this.title,
-        date: this.date,
-        amount: this.amount,
-        group_id: this.groupId,
-        budget_id: this.budgetId,
-        description: this.descr,
-        account_id: accountId,
-        month: new Date(this.date).getMonth() + 1,
-        year: new Date(this.date).getFullYear(),
-      };
-
-      await this.addCost(cost);
-    },
-    toggleAddGroupOpen() {
-      this.isAddGroupOpen = !this.isAddGroupOpen;
-    },
-    async addGroupHandler(group) {
-      const result = await this.addGroup(group);
-      if (result) {
-        this.toggleAddGroupOpen();
-        this.$toast.info("Group is added");
-      } else {
-        this.$toast.info("Something is went wrong");
-      }
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";

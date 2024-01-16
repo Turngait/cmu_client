@@ -15,7 +15,7 @@ export default {
     costs(state) {
       return state.costs;
     },
-    costsGroup(state) {
+    getCostsGroup(state) {
       return state.groups;
     },
     costsByPeriod(state) {
