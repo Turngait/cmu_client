@@ -51,7 +51,7 @@
 <script>
 import Overlay from "../../components/partials/Overlay.vue";
 import TopMenu from "../../components/partials/TopMenu.vue";
-import Day from "./Components/Day.vue";
+import Day from "./Components/IncomeDay.vue";
 import AddBigBtn from "../../components/controls/AddBigBtn.vue";
 import AddIncomeModal from "./Modals/AddIncomeModal.vue";
 import Preloader from "../../components/partials/Preloader.vue";

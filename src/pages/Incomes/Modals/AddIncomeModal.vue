@@ -1,11 +1,91 @@
+<script setup>
+  import { ref, defineProps, computed } from 'vue';
+  import {useToast} from 'vue-toast-notification';
+  import 'vue-toast-notification/dist/theme-bootstrap.css';
+  import { useVuelidate } from "@vuelidate/core";
+  import { required,  minValue, helpers } from "@vuelidate/validators";
+
+  import Button from "../../../components/controls/Button.vue";
+  import TextInput from "../../../components/controls/TextInput.vue";
+  import TxtArea from "../../../components/controls/TxtArea.vue";
+  import AddSourceModal from "./AddSourceModal.vue";
+  import PopUp from "../../../components/partials/PopUp.vue";
+  import SelectBudgets from "../../../components/controls/SelectBudgets.vue";
+  import Select from "../../../components/controls/Select.vue";
+
+  const $toast = useToast({ position: "top" });
+
+  const props = defineProps([
+    "onClose",
+    "sources",
+    "budgets",
+    "addIncome",
+    "addSource",
+    "msg",
+  ]);
+
+  const date = ref(new Date().toISOString().slice(0, 10));
+  const title = ref('');
+  const amount = ref('');
+  const sourceId = ref(Array.isArray(props.sources) && props.sources.length > 0
+          ? props.sources[0].id
+          : "");
+  const budgetId = ref(Array.isArray(props.budgets) && props.budgets.length > 0
+          ? props.budgets[0].id
+          : "");
+  const descr = ref('');
+  const isAddSourceOpen = ref(false);
+
+  const mustBeCurrency = helpers.regex(/^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/);
+
+  const rules = computed(() => ({ 
+      title: { required },
+      amount: {
+        required,
+        mustBeCurrency,
+        minValueValue: minValue(0),
+      },
+    }));
+  const v$ = useVuelidate(rules, { title, amount });
+
+  async function saveIncome() {
+    const accountId = localStorage.getItem("accountId");
+
+    const income = {
+      date: date.value,
+      title: title.value,
+      budget_id: budgetId.value,
+      source_id: sourceId.value,
+      amount: amount.value,
+      description: descr.value,
+      month: new Date(date.value).getMonth() + 1,
+      year: new Date(date.value).getFullYear(),
+      account_id: accountId,
+    };
+    await props.addIncome(income);
+  }
+  async function addSourceHandler(source) {
+    const result = await props.addSource(source);
+    if (result) {
+      toggleAddSourceOpen();
+      $toast.info("Source is added");
+    } else {
+      $toast.info("Something is went wrong");
+    }
+  }
+  function toggleAddSourceOpen() {
+    isAddSourceOpen.value = !isAddSourceOpen.value;
+  }
+</script>
+
 <template>
   <AddSourceModal
     v-if="isAddSourceOpen"
     :onClose="toggleAddSourceOpen"
     :addSource="addSourceHandler"
-    :msg="msg"
+    :msg="props.msg"
   />
-  <PopUp :header="$t('incomes.add')" :onClose="onClose" v-else>
+  <PopUp :header="$t('incomes.add')" :onClose="props.onClose" v-else>
     <TextInput typeInput="date" @inputChange="(data) => (date = data)" />
     <label>
       <TextInput
@@ -26,14 +106,14 @@
     </label>
     <div class="modal__addSourceBox">
       <Select
-        :data="sources"
+        :data="props.sources"
         @selectChange="(data) => (sourceId = data)"
         :selectedId="sourceId"
       />
       <Button :onClick="toggleAddSourceOpen" title="+" />
     </div>
     <SelectBudgets
-      :data="budgets"
+      :data="props.budgets"
       @selectChange="(data) => (budgetId = data)"
       :selectedId="budgetId"
     />
@@ -41,7 +121,7 @@
       :placeholder="$t('incomes.description') + '...'"
       @areaChange="(data) => (descr = data)"
     />
-    <p class="modal_msg">{{ msg }}</p>
+    <p class="modal_msg">{{ props.msg }}</p>
     <Button
       :isActive="!v$.title.$invalid && !v$.amount.$invalid"
       :onClick="saveIncome"
@@ -50,101 +130,6 @@
     />
   </PopUp>
 </template>
-
-<script>
-import { useVuelidate } from "@vuelidate/core";
-import { required,  minValue, helpers } from "@vuelidate/validators";
-import Button from "../../../components/controls/Button.vue";
-import TextInput from "../../../components/controls/TextInput.vue";
-import TxtArea from "../../../components/controls/TxtArea.vue";
-import AddSourceModal from "./AddSourceModal.vue";
-import PopUp from "../../../components/partials/PopUp.vue";
-import SelectBudgets from "../../../components/controls/SelectBudgets.vue";
-import Select from "../../../components/controls/Select.vue";
-
-export default {
-  name: "AddIncomeModal",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      date: new Date().toISOString().slice(0, 10),
-      title: "",
-      amount: "",
-      sourceId:
-        Array.isArray(this.sources) && this.sources.length > 0
-          ? this.sources[0].id
-          : "",
-      budgetId:
-        Array.isArray(this.budgets) && this.budgets.length > 0
-          ? this.budgets[0].id
-          : "",
-      descr: "",
-      isAddSourceOpen: false,
-    };
-  },
-  validations() {
-    const mustBeCurrency = helpers.regex(/^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/);
-    return {
-      title: { required },
-      amount: { 
-        required,
-        mustBeCurrency,
-        minValueValue: minValue(0), 
-       },
-    };
-  },
-  methods: {
-    async saveIncome() {
-      const accountId = localStorage.getItem("accountId");
-
-      const income = {
-        date: this.date,
-        title: this.title,
-        budget_id: this.budgetId,
-        source_id: this.sourceId,
-        amount: this.amount,
-        description: this.descr,
-        month: new Date(this.date).getMonth() + 1,
-        year: new Date(this.date).getFullYear(),
-        account_id: accountId,
-      };
-      await this.addIncome(income);
-    },
-    async addSourceHandler(source) {
-      const result = await this.addSource(source);
-      if (result) {
-        this.toggleAddSourceOpen();
-        this.$toast.info("Source is added");
-      } else {
-        this.$toast.info("Something is went wrong");
-      }
-    },
-    toggleAddSourceOpen() {
-      this.isAddSourceOpen = !this.isAddSourceOpen;
-    },
-  },
-  components: {
-    Button,
-    TextInput,
-    TxtArea,
-    AddSourceModal,
-    PopUp,
-    SelectBudgets,
-    Select
-  },
-  props: [
-    "onClose",
-    "sources",
-    "budgets",
-    "addCost",
-    "addIncome",
-    "addSource",
-    "msg",
-  ],
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";

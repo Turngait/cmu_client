@@ -1,8 +1,28 @@
+<script setup>
+  import { ref, defineProps } from 'vue';
+
+  import PopUp from "../../../components/partials/PopUp.vue";
+
+  import { numberFormat, formateDate } from "../../../utils";
+
+  const props = defineProps(["onClose", "filteredIncomes"]);
+
+  const currency = ref(localStorage.getItem("currency"));
+
+  function formatNumber(amount) {
+    return numberFormat(amount);
+  }
+
+  function dateFormat(date) {
+    return formateDate(date);
+  }
+</script>
+
 <template>
-  <PopUp :header="$t('incomes.filteredIncomesTitle')" :onClose="onClose">
+  <PopUp :header="$t('incomes.filteredIncomesTitle')" :onClose="props.onClose">
     <div
       class="filteredIncomesBox"
-      v-for="income of filteredIncomes"
+      v-for="income of props.filteredIncomes"
       :key="income.id"
     >
       <div class="filteredIncomesBox__mainInfoBox">
@@ -19,31 +39,6 @@
     </div>
   </PopUp>
 </template>
-
-<script>
-import PopUp from "../../../components/partials/PopUp.vue";
-
-import { numberFormat, formateDate } from "../../../utils";
-
-export default {
-  name: "FilteredIncomesModal",
-  components: { PopUp },
-  props: ["onClose", "filteredIncomes"],
-  data() {
-    return {
-      currency: localStorage.getItem("currency"),
-    };
-  },
-  methods: {
-    formatNumber(amount) {
-      return numberFormat(amount);
-    },
-    dateFormat(date) {
-      return formateDate(date);
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";
