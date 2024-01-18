@@ -1,5 +1,37 @@
+<script setup>
+  import { ref, defineProps, computed } from 'vue';
+
+  import { useVuelidate } from "@vuelidate/core";
+  import { required } from "@vuelidate/validators";
+  import Button from "../../../components/controls/Button.vue";
+  import TextInput from "../../../components/controls/TextInput.vue";
+  import PopUp from "../../../components/partials/PopUp.vue";
+  
+  const props = defineProps(["onClose", "addBudget", "msg"]);
+  const title = ref('');
+  const isCalc = ref(true);
+  const description = ref('');
+
+  function saveBudget() {
+    const accountId = localStorage.getItem("accountId");
+    const budget = {
+      title: title.value,
+      description: description.value,
+      is_calculating: isCalc.value,
+      account_id: accountId,
+      created_at: new Date(),
+    };
+    props.addBudget(budget);
+  }
+  const rules = computed(() => ({ 
+    title: { required },
+  }));
+  const v$ = useVuelidate(rules, { title });
+
+</script>
+
 <template>
-  <PopUp :header="$t('budgets.add')" :onClose="onClose">
+  <PopUp :header="$t('budgets.add')" :onClose="props.onClose">
     <label>
       <TextInput
         :placeholder="$t('budgets.title') + '...'"
@@ -12,7 +44,7 @@
         <input type="checkbox" v-model="isCalc" />
         {{ $t("budgets.isCalc") }}
       </label> -->
-    <p class="modal_msg">{{ msg }}</p>
+    <p class="modal_msg">{{ props.msg }}</p>
     <Button
       :isActive="!v$.title.$invalid"
       :onClick="saveBudget"
@@ -21,48 +53,6 @@
     />
   </PopUp>
 </template>
-
-<script>
-import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-import Button from "../../../components/controls/Button.vue";
-import TextInput from "../../../components/controls/TextInput.vue";
-import PopUp from "../../../components/partials/PopUp.vue";
-
-export default {
-  name: "AddBudgetModal",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      title: "",
-      isCalc: true,
-      description: "",
-    };
-  },
-  validations() {
-    return {
-      title: { required },
-    };
-  },
-  components: { Button, TextInput, PopUp },
-  props: ["onClose", "addBudget", "msg"],
-  methods: {
-    saveBudget() {
-      const accountId = localStorage.getItem("accountId");
-      const budget = {
-        title: this.title,
-        description: this.description,
-        is_calculating: this.isCalc,
-        account_id: accountId,
-        created_at: new Date(),
-      };
-      this.addBudget(budget);
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";

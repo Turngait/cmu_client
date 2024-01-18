@@ -1,5 +1,31 @@
+<script setup>
+  import { ref, defineProps } from 'vue';
+
+  import Button from "../../../components/controls/Button.vue";
+  import TextInput from "../../../components/controls/TextInput.vue";
+  import PopUp from "../../../components/partials/PopUp.vue";
+
+  const props = defineProps(["onClose", "editBudget", "budget"]);
+
+  const balance = ref(props.budget.balance);
+  const title = ref(props.budget.title);
+  const isCalc = ref(props.budget.is_calculated);
+
+  function saveBudget() {
+    const budget = {
+      id: props.budget.id,
+      title: title.value,
+      balance: balance.value,
+      is_calculating: isCalc.value,
+      created_at: props.budget.created_at,
+    };
+    props.editBudget(budget);
+  }
+
+</script>
+
 <template>
-  <PopUp :header="$t('budgets.edit')" :onClose="onClose">
+  <PopUp :header="$t('budgets.edit')" :onClose="props.onClose">
     <TextInput
       :placeholder="$t('budgets.title') + '...'"
       @inputChange="(data) => (title = data)"
@@ -12,36 +38,5 @@
     <Button :onClick="saveBudget" :title="$t('common.save')" />
   </PopUp>
 </template>
-
-<script>
-import Button from "../../../components/controls/Button.vue";
-import TextInput from "../../../components/controls/TextInput.vue";
-import PopUp from "../../../components/partials/PopUp.vue";
-
-export default {
-  name: "EditBudgetModal",
-  data() {
-    return {
-      balance: this.budget.balance,
-      title: this.budget.title,
-      isCalc: this.budget.is_calculated,
-    };
-  },
-  components: { Button, TextInput, PopUp },
-  props: ["onClose", "editBudget", "budget"],
-  methods: {
-    saveBudget() {
-      const budget = {
-        id: this.budget.id,
-        title: this.title,
-        balance: this.balance,
-        is_calculating: this.isCalc,
-        created_at: this.budget.created_at,
-      };
-      this.editBudget(budget);
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped></style>

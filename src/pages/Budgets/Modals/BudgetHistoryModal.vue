@@ -1,5 +1,31 @@
+<script setup>
+  import { ref, onMounted, defineProps, computed } from 'vue';
+  import { useStore } from 'vuex';
+
+  import PopUp from "../../../components/partials/PopUp.vue";
+
+  const store = useStore();
+  const props = defineProps(["onClose", "items", "currency", "balance"]);
+
+  const period = ref(computed(() => store.state.user.month));
+  const spent = ref(0);
+  const gain = ref(0);
+
+  onMounted(() => {
+    spent.value = props.items.costs.reduce(
+      (acc, item) => (acc += item.amount),
+      0
+    );
+    gain.value = props.items.incomes.reduce(
+      (acc, item) => (acc += item.amount),
+      0
+    );
+  });
+
+</script>
+
 <template>
-  <PopUp :header="$t('budgets.history')" :onClose="onClose">
+  <PopUp :header="$t('budgets.history')" :onClose="props.onClose">
     <div class="historyBoxInfo">
       <div class="historyBoxInfo__item">
         {{
@@ -10,13 +36,13 @@
         }}
       </div>
       <div class="historyBoxInfo__item">
-        {{ $t("accounts.balance") }}: {{ balance }} {{ currency }}
+        {{ $t("accounts.balance") }}: {{ props.balance }} {{ props.currency }}
       </div>
       <div class="historyBoxInfo__item">
-        {{ $t("budgets.spent") }}: {{ spent }} {{ currency }}
+        {{ $t("budgets.spent") }}: {{ spent }} {{ props.currency }}
       </div>
       <div class="historyBoxInfo__item">
-        {{ $t("budgets.gain") }}: {{ gain }} {{ currency }}
+        {{ $t("budgets.gain") }}: {{ gain }} {{ props.currency }}
       </div>
     </div>
     <div class="historyBox">
@@ -24,10 +50,10 @@
         <div class="historyBox__itemsBox__heading">
           {{ $t("common.costs") }}
         </div>
-        <div v-if="items.costs.length">
+        <div v-if="props.items.costs.length">
           <div
             class="historyBox__itemsBox__amountBox"
-            v-for="item of items.costs"
+            v-for="item of props.items.costs"
             :key="item.date"
           >
             <span class="historyBox__itemsBox__amountBox__title"
@@ -39,12 +65,12 @@
                 }).format(new Date(item.date))
               }}</b></span
             >
-            {{ item.amount }} {{ currency }}
+            {{ item.amount }} {{ props.currency }}
             <div v-for="cost of item.items" :key="cost.id">
               <span class="historyBox__itemsBox__amountBox__title">{{
                 cost.title
               }}</span>
-              {{ cost.amount }} {{ currency }}
+              {{ cost.amount }} {{ props.currency }}
             </div>
           </div>
         </div>
@@ -55,10 +81,10 @@
         <div class="historyBox__itemsBox__heading">
           {{ $t("common.incomes") }}
         </div>
-        <div v-if="items.incomes.length">
+        <div v-if="props.items.incomes.length">
           <div
             class="historyBox__itemsBox__amountBox"
-            v-for="item of items.incomes"
+            v-for="item of props.items.incomes"
             :key="item.date"
           >
             <span class="historyBox__itemsBox__amountBox__title"
@@ -70,12 +96,12 @@
                 }).format(new Date(item.date))
               }}</b></span
             >
-            {{ item.amount }} {{ currency }}
+            {{ item.amount }} {{ props.currency }}
             <div v-for="income of item.items" :key="income.id">
               <span class="historyBox__itemsBox__amountBox__title">{{
                 income.title
               }}</span>
-              {{ income.amount }} {{ currency }}
+              {{ income.amount }} {{ props.currency }}
             </div>
           </div>
         </div>
@@ -84,35 +110,6 @@
     </div>
   </PopUp>
 </template>
-
-<script>
-import PopUp from "../../../components/partials/PopUp.vue";
-
-export default {
-  name: "BudgetHistoryModal",
-  components: {
-    PopUp,
-  },
-  data() {
-    return {
-      period: this.$store.state.user.month,
-      spent: 0,
-      gain: 0,
-    };
-  },
-  props: ["onClose", "items", "currency", "balance"],
-  mounted() {
-    this.spent = this.items.costs.reduce(
-      (acc, item) => (acc += item.amount),
-      0
-    );
-    this.gain = this.items.incomes.reduce(
-      (acc, item) => (acc += item.amount),
-      0
-    );
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";

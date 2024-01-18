@@ -168,7 +168,7 @@ export default {
 
         data.incomes.incomeGraphData &&
         data.incomes.incomeGraphData.days.length > 2
-          ? (this.incomesGraphShow = true)
+          ? (this.incomesGraphShow = false)
           : (this.incomesGraphShow = false);
         data.costs.graphData && data.costs.graphData.days.length > 2
           ? (this.costGraphShow = true)

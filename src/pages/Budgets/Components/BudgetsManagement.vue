@@ -1,21 +1,19 @@
+<script setup>
+  import { defineProps } from 'vue';
+  const props = defineProps(['onClickTransfer', 'isTransferPossible']);
+</script>
+
 <template>
   <div class="budgetsManagement">
     <button
-      v-if="isTransferPossible"
+      v-if="props.isTransferPossible"
       class="budgetsManagement__openTransferBtn"
-      @click="onClickTransfer"
+      @click="props.onClickTransfer"
     >
       {{ $t('budgets.transferBetweenBudgets') }}
     </button>
   </div>
 </template>
-
-<script>
-export default {
-  name: "budgets-management",
-  props: ['onClickTransfer', 'isTransferPossible'],
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";
