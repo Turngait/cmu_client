@@ -168,7 +168,7 @@ export default {
 
         data.incomes.incomeGraphData &&
         data.incomes.incomeGraphData.days.length > 2
-          ? (this.incomesGraphShow = false)
+          ? (this.incomesGraphShow = true)
           : (this.incomesGraphShow = false);
         data.costs.graphData && data.costs.graphData.days.length > 2
           ? (this.costGraphShow = true)
@@ -208,7 +208,7 @@ export default {
         costsGarphData.days.length > 2
       ) {
         costsGarphData.days = this.normalizeDateForGraph(costsGarphData.days);
-        incomesGarphData.days = this.normalizeDateForGraph(costsGarphData.days);
+        incomesGarphData.days = this.normalizeDateForGraph(incomesGarphData.days);
         const costsOptions = {
           color: "#00A6CB",
           label: this.$t("common.costs"),
