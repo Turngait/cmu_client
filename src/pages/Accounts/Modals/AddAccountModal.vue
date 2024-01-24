@@ -1,5 +1,47 @@
+<script setup>
+  import { ref, defineProps, computed } from 'vue';
+  import { useVuelidate } from "@vuelidate/core";
+  import { required, minValue, helpers } from "@vuelidate/validators";
+
+  import Button from "../../../components/controls/Button.vue";
+  import TextInput from "../../../components/controls/TextInput.vue";
+  import TxtArea from "../../../components/controls/TxtArea.vue";
+  import PopUp from "../../../components/partials/PopUp.vue";
+
+  const props = defineProps(["onClose", "currencies", "msg", "addAccount"]);
+
+  const title = ref('');
+  const description = ref('');
+  const currency = ref("$");
+  const amount = ref(0);
+
+  function saveAccount() {
+    const newAccount = {
+      title: title.value,
+      description: description.value,
+      currency: currency.value,
+      balance: amount.value,
+      created_at: new Date(),
+    };
+    props.addAccount(newAccount);
+  }
+
+  const mustBeCurrency = helpers.regex(/^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/);
+
+  const rules = computed(() => ({ 
+      title: { required },
+      amount: {
+        minValueValue: minValue(0), 
+        required,
+        mustBeCurrency
+      },
+    }));
+  const v$ = useVuelidate(rules, { title, amount });
+
+</script>
+
 <template>
-  <PopUp :header="$t('accounts.add')" :onClose="onClose">
+  <PopUp :header="$t('accounts.add')" :onClose="props.onClose">
     <label>
       <TextInput
         :placeholder="$t('accounts.title') + '...'"
@@ -19,7 +61,7 @@
     </label>
     <select class="modal__select" v-model="currency">
       <option
-        v-for="curr of currencies"
+        v-for="curr of props.currencies"
         :key="curr.abbreviation"
         :value="curr.abbreviation"
       >
@@ -30,7 +72,7 @@
       :placeholder="$t('accounts.description') + '...'"
       @areaChange="(data) => (description = data)"
     />
-    <p class="modal_msg">{{ msg }}</p>
+    <p class="modal_msg">{{ props.msg }}</p>
     <Button
       :isActive="!v$.title.$invalid"
       :onClick="saveAccount"
@@ -39,51 +81,6 @@
     />
   </PopUp>
 </template>
-
-<script>
-import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-
-import Button from "../../../components/controls/Button.vue";
-import TextInput from "../../../components/controls/TextInput.vue";
-import TxtArea from "../../../components/controls/TxtArea.vue";
-import PopUp from "../../../components/partials/PopUp.vue";
-
-export default {
-  name: "AddAccountModal",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      title: "",
-      description: "",
-      currency: "$",
-      amount: 0,
-    };
-  },
-  validations() {
-    return {
-      title: { required },
-      amount: { required },
-    };
-  },
-  components: { Button, TextInput, TxtArea, PopUp },
-  props: ["onClose", "currencies", "msg", "addAccount"],
-  methods: {
-    saveAccount() {
-      const newAccount = {
-        title: this.title,
-        description: this.description,
-        currency: this.currency,
-        balance: this.amount,
-        created_at: new Date(),
-      };
-      this.addAccount(newAccount);
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";

@@ -1,5 +1,40 @@
+<script setup>
+  import { ref, defineProps, computed } from 'vue';
+  import { useVuelidate } from "@vuelidate/core";
+  import { required } from "@vuelidate/validators";
+
+  import Button from "../../../components/controls/Button.vue";
+  import TextInput from "../../../components/controls/TextInput.vue";
+  import TxtArea from "../../../components/controls/TxtArea.vue";
+
+  import PopUp from "../../../components/partials/PopUp.vue";
+
+  const props = defineProps(["onClose", "currencies", "msg", "onEdit", "item"]);
+
+  const title = ref(props.item.title);
+  const description = ref(props.item.description);
+  const currency = ref(props.item.currency);
+
+  async function saveAccount() {
+    const account = {
+      id: props.item.id,
+      title: title.value,
+      description: description.value,
+      currency: currency.value,
+      balance: props.item.balance,
+      created_at: props.item.created_at,
+    };
+    await props.onEdit(account);
+  }
+
+  const rules = computed(() => ({ 
+      title: { required },
+    }));
+  const v$ = useVuelidate(rules, { title });
+</script>
+
 <template>
-  <PopUp :header="$t('accounts.edit')" :onClose="onClose">
+  <PopUp :header="$t('accounts.edit')" :onClose="props.onClose">
     <label>
       <TextInput
         :placeholder="$t('accounts.title') + '...'"
@@ -10,7 +45,7 @@
     </label>
     <select class="modal__select" v-model="currency">
       <option
-        v-for="curr of currencies"
+        v-for="curr of props.currencies"
         :key="curr.abbreviation"
         :value="curr.abbreviation"
       >
@@ -22,7 +57,7 @@
       @areaChange="(data) => (description = data)"
       :val="description"
     />
-    <p class="modal_msg">{{ msg }}</p>
+    <p class="modal_msg">{{ props.msg }}</p>
     <Button
       :isActive="!v$.title.$invalid"
       :onClick="saveAccount"
@@ -30,51 +65,6 @@
     />
   </PopUp>
 </template>
-
-<script>
-import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-
-import Button from "../../../components/controls/Button.vue";
-import TextInput from "../../../components/controls/TextInput.vue";
-import TxtArea from "../../../components/controls/TxtArea.vue";
-
-import PopUp from "../../../components/partials/PopUp.vue";
-
-export default {
-  name: "EditAccountModal",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      title: this.item.title,
-      description: this.item.description,
-      currency: this.item.currency,
-    };
-  },
-  validations() {
-    return {
-      title: { required },
-    };
-  },
-  components: { Button, TextInput, TxtArea, PopUp },
-  props: ["onClose", "currencies", "msg", "onEdit", "item"],
-  methods: {
-    async saveAccount() {
-      const account = {
-        id: this.item.id,
-        title: this.title,
-        description: this.description,
-        currency: this.currency,
-        balance: this.item.balance,
-        created_at: this.item.created_at,
-      };
-      await this.onEdit(account);
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import "/src/styles/main.scss";
