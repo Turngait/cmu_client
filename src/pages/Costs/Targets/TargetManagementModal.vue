@@ -39,6 +39,7 @@
     :groups="props.groups"
     :onClose="addTargetToggle"
     :addTarget="props.addTarget"
+    :isDailyTargetExists="props.targets.day.length > 0"
   />
   <EditTargetModal
     v-else-if="editableTarget && !isAddTargetOpen"
@@ -54,7 +55,11 @@
         </h3>
         <CloseBtnIcon :onClick="props.onClose" />
       </div>
-      <div class="targets">
+      <p class="targets__heading">{{ $t('costs.dailyTargetHeading') }}</p>
+      <div class="targets" v-if="props.targets.day.length === 0">
+        <p class="targets__empty">{{ $t('costs.noTargetsHere') }}</p>
+      </div>
+      <div class="targets" v-else>
         <TargetItem
           v-for="target of props.targets.day"
           :key="target.id"
@@ -64,7 +69,11 @@
           :currency="currency"
         />
       </div>
-      <div class="targets">
+      <p class="targets__heading">{{ $t('costs.monthlyTargetHeading') }}</p>
+      <div class="targets" v-if="props.targets.month.length === 0">
+        <p class="targets__empty">{{ $t('costs.noTargetsHere') }}</p>
+      </div>
+      <div class="targets" v-else>
         <TargetItem
           v-for="target of props.targets.month"
           :key="target.id"
@@ -103,6 +112,7 @@
   border-radius: 5px;
   color: $black;
   padding: 2.5rem;
+  overflow-y: auto;
 
   display: flex;
   flex-direction: column;
@@ -136,11 +146,24 @@
   display: flex;
   gap: 1.4rem;
   flex-wrap: wrap;
+  margin-bottom: 1.6rem;
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__heading {
+    font-size: 2rem;
+  }
+
+  &__empty {
+    font-size: 1.6rem;
+  }
 }
 
 @media all and (min-width: 0) and (max-width: 500px) {
   .modal {
     width: 100%;
+    height: 90%;
   }
 }
 </style>

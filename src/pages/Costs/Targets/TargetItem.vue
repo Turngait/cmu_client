@@ -18,12 +18,7 @@
   function onEdit() {
     props.editTarget(props.target);
   }
-  // TODO Change on i18n
-  function showType(type) {
-    return type === "day"
-      ? "Daily"
-      : "Monthly";
-  }
+
   onMounted(() => {
     groupName.value = showGroupName(
       +props.target.group_id,
@@ -36,13 +31,12 @@
 <template>
   <div class="target">
     <div class="target__headerBox">
-      <h3 class="target__headerBox__title">{{ showType(props.target.type) }}</h3>
+      <div class="target__amount">{{ props.target.amount + " " + props.currency }}</div>
       <div class="target__headerBox__iconBox">
         <EditBtnIcon :onClick="onEdit" />
         <DeleteBtnIcon :onClick="onDelete" />
       </div>
     </div>
-    <div class="target__amount">{{ props.target.amount + " " + props.currency }}</div>
     <div
       v-if="target.type === 'month'"
       class="target__info target__groupTitle"

@@ -7,8 +7,8 @@
   import TextInput from "../../../components/controls/TextInput.vue";
   import PopUp from "../../../components/partials/PopUp.vue";
 
-  const props = defineProps(["onClose", "groups", "addTarget", "msg"]);
-  const type = ref("day");
+  const props = defineProps(["onClose", "groups", "addTarget", "msg", "isDailyTargetExists"]);
+  const type = ref("month");
   const amount = ref("");
   const groupId = ref(Array.isArray(props.groups) && props.groups.length > 0
           ? props.groups[0].id
@@ -37,11 +37,11 @@
 <template>
   <PopUp class="overlay" :header="$t('costs.addTarget')" :onClose="props.onClose">
     <select class="selectCost" v-model="type">
-      <option value="day" selected>
-        {{ $t("costs.targetTypeDay") }}
-      </option>
       <option value="month" selected>
         {{ $t("costs.targetTypeMonth") }}
+      </option>
+      <option value="day" v-if="!isDailyTargetExists">
+        {{ $t("costs.targetTypeDay") }}
       </option>
     </select>
     <label>

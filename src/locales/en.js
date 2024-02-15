@@ -119,6 +119,9 @@ export default {
     dailyTarget: "Daily target",
     showMonthlyTarget: "Show monthly targets",
     hideMonthlyTarget: "Hide monthly targets",
+    dailyTargetHeading: "Daily target",
+    monthlyTargetHeading: "Monthly targets",
+    noTargetsHere: "No targets added yet",
     targetExceeded: "Target is exceeded",
   },
   incomes: {

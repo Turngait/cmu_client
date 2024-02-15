@@ -96,6 +96,8 @@ export default {
     dailyTarget: "Цель на день",
     showMonthlyTarget: "Показать цели на месяц",
     hideMonthlyTarget: "Скрыть цели на месяц",
+    dailyTargetHeading: "Таргет на день",
+    monthlyTargetHeading: "Месячные таргеты",
     targetExceeded: "Цель превышена",
   },
   incomes: {

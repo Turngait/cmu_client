@@ -1,6 +1,11 @@
 [
   {
-    "version": "0.9.7",
+    "version": "0.10.1",
+    "date": "14.12.2023",
+    "description": "Several bugs was fixed. Improve performance"
+  },
+  {
+    "version": "0.10.0",
     "date": "14.12.2023",
     "description": "Add new feature - transfer money between budgets."
   },
