@@ -47,6 +47,7 @@
         :placeholder="$t('accounts.title') + '...'"
         @inputChange="(data) => (title = data)"
         dataTest="title"
+        :max-length="16"
       />
       <div v-if="v$.title.$invalid">{{ $t("msg.titleReg") }}</div>
     </label>

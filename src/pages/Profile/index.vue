@@ -19,6 +19,7 @@
             :placeholder="$t('user.name') + '...'"
             :val="name"
             @inputChange="(data) => (name = data)"
+            :max-length="20"
           />
           <Button
             :isActive="!v$.name.$invalid"

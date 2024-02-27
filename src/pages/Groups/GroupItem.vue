@@ -5,6 +5,7 @@
       v-if="isEdit"
       :placeholder="$t('costs.title') + '...'"
       @inputChange="(val) => (groupTitle = val)"
+      :max-length="16"
     />
     <div class="groupItem__title" v-else>{{ item.title }}</div>
     <div class="groupItem__iconBox">

@@ -30,6 +30,7 @@
       :placeholder="$t('budgets.title') + '...'"
       @inputChange="(data) => (title = data)"
       :val="title"
+      :max-length="18"
     />
     <!-- <label>
         <input type="checkbox" v-model="isCalc" />

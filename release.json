@@ -1,6 +1,16 @@
 [
   {
-    "version": "0.9.7",
+    "version": "0.11.0",
+    "date": "27.02.2024",
+    "description": "Add max length for Inputs."
+  },
+  {
+    "version": "0.10.1",
+    "date": "15.02.2024",
+    "description": "Several bugs was fixed. Improve performance"
+  },
+  {
+    "version": "0.10.0",
     "date": "14.12.2023",
     "description": "Add new feature - transfer money between budgets."
   },

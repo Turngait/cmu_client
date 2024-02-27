@@ -9,6 +9,7 @@
       :type="typeInput"
       :name="nameInput"
       :data-test="dataTest"
+      :maxlength="maxLength"
     />
   </div>
 </template>
@@ -40,6 +41,9 @@ export default {
     },
     val: {
       default: undefined,
+    },
+    maxLength: {
+      default: 10000,
     },
     dataTest: {
       type: String,
