@@ -50,7 +50,8 @@
         {{ `${$t("common.today")}: ${spentByDay}  ${currency}` }}
       </div>
       <div v-if="dailyTarget">
-        {{ `${$t("costs.dailyTarget")}: ${dailyTarget} ${currency}` }}
+        {{ `${$t("costs.dailyTarget")}: ${dailyTarget}` }}
+        \ {{ dailyTarget && dailyTarget !== 0 ? ((spentByDay / dailyTarget) * 100).toFixed(2) : 0 }}%
       </div>
       <div v-if="isTargetExceeded">
         <div class="attention" :title="$t('costs.targetExceeded')">!</div>

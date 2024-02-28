@@ -8,11 +8,11 @@
       :initLocale="locale"
     />
     <div class="topMenu">
-      <div class="topMenu__miniBox">
+      <div class="topMenu__miniBox topMenu__firstBox">
         <h1 class="topMenu__title" @click="goToDashboard">
           CalcMeUp <span class="betaVersion">Beta</span>
         </h1>
-        <div class="topMenu__balance">{{ pageName }}</div>
+        <div class="topMenu__balance topMenu__pageTitle">{{ pageName }}</div>
         <div class="topMenu__balance">
           {{ $t("user.balance") }}: {{ Number.parseFloat(balance).toFixed(2) }}
         </div>
@@ -182,6 +182,10 @@ export default {
 @media all and (min-width: 0) and (max-width: 500px) {
   .topMenu {
     padding: 1.4rem 1.2rem;
+    flex-direction: column;
+  }
+  .topMenu__pageTitle {
+    display: none;
   }
   .inp {
     padding: 5px 20px;

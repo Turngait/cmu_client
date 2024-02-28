@@ -87,6 +87,7 @@ export default {
     noCosts: "Пока еще нет ни одного расхода в этот период",
     budget: "Счет",
     filteredCostTitle: "Отфильтрованные расходы",
+    target: "Цель",
     total: "Всего",
     targetsManagement: "Управление целями",
     addTarget: "Добавить",

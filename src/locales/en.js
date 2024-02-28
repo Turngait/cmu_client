@@ -110,6 +110,7 @@ export default {
     noCosts: "There are no expenses at this month",
     budget: "Budget",
     filteredCostTitle: "Filtered expenses",
+    target: "Target",
     total: "Total",
     targetsManagement: "Targets management",
     addTarget: "Add Target",

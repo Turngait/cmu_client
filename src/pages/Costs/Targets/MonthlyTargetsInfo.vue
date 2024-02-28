@@ -15,10 +15,11 @@
       :key="target.id"
       class="monthlyTargetsBox__item"
     >
-       {{ $t("costs.group") }}:
-      {{ props.showTargetGroupName(+target.group_id) }} - {{ target.amount
-      }}{{ props.currency }}. {{ $t("costs.total") }} - {{ target.groupSum
-      }}{{ props.currency }}
+      <b>{{ props.showTargetGroupName(+target.group_id) }}</b> - {{ target.groupSum
+      }} {{ props.currency }} 
+      <br/>
+      {{ $t("costs.target") }} - {{ target.amount
+      }} {{ props.currency }} \ {{ target.amount && target.amount !== 0 ? ((target.groupSum / target.amount) * 100).toFixed(2) : 0 }}%
     </div>
   </div>
 </template>
@@ -41,6 +42,11 @@
     &:last-child {
       margin-bottom: 0;
     }
+  }
+}
+@media all and (min-width: 0) and (max-width: 480px) {
+  .monthlyTargetsBox {
+    padding: 1rem;
   }
 }
 </style>
